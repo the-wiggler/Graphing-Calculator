@@ -2,60 +2,10 @@
 #include <SDL2/SDL.h>
 #include <cmath>
 #include <vector>
+#include "numOutputs.hpp"
 
 #define WINDOW_SIZE_X 1000
 #define WINDOW_SIZE_Y 800
-
-class numericalOutputs {
-    private:
-
-    public:
-        int function_res;
-        std::vector<double> x_arr, y_arr;
-        double y_min, y_max, x_min, x_max, x_range, y_range;
-
-        void executeFunctionCalculation() {
-            // sets the range that the function should exist in
-            function_res = 1000;
-            double domain_min = -50;
-            double domain_max = 5;
-
-            //how often x should should graph points as based on the path resolution
-            double function_res_render_increment = (domain_max - domain_min) / function_res;
-
-            //starts x at the minimum bounds to graph function across bounds
-            double x = domain_min;
-            // Loop that creates all of the points in the graph
-            for (int i = 0; i < function_res + 1; i++) {
-                // the function
-                double y = sin(10 * x) * cos(12 * pow(x, 2)) * exp(-0.1 * pow(x, 2)) +
-                    0.4 * tanh(5 * sin(8 * x)) * cos(20 * x) +
-                    0.2 * sin(30 * x) * pow(cos(x * x), 2) * sin(x * x * x) +
-                    0.15 * sin(50 * x) / (1 + pow(x, 2)) * cos(x * x * 5) *
-                    (sin(x * 25) > 0 ? sin(x * 25) : 0.3 * cos(x * 15));
-
-                x_arr.push_back(x);
-                y_arr.push_back(y);
-
-                x += function_res_render_increment;
-             }
-
-            // finds max and min values
-            x_min = domain_min;
-            x_max = domain_max;
-            y_min = y_arr[0];
-            y_max = y_arr[0];
-            for (double y : y_arr) {
-                if (y < y_min) y_min = y;
-                if (y > y_max) y_max = y;
-            }
-            
-            // range values
-            x_range = domain_max - domain_min;
-            y_range = y_max - y_min;
-        }
-};
-
 
 
 int SDL_main(int argc, char* argv[]) {
@@ -91,7 +41,6 @@ int SDL_main(int argc, char* argv[]) {
         }
 
         SDL_RenderPresent(renderer);
-        
 
 
         // stops the rendering loop until a certain command is executed
