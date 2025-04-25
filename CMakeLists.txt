@@ -5,16 +5,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find SDL2 package
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
-
+find_package(SDL2 REQUIRED CONFIG)
 # Find OpenGL
 find_package(OpenGL REQUIRED)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_link_libraries(${PROJECT_NAME}
-    ${SDL2_LIBRARIES}
+    SDL2::SDL2main
+    SDL2::SDL2
     OpenGL::GL
 )
 
