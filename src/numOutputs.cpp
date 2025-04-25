@@ -1,35 +1,46 @@
+#include <iostream>
 #include "numOutputs.hpp"
 #include <cmath>
+#include <vector>
 
-void numericalOutputs::executeFunctionCalculation() {
-    function_res = 1000;
-    double domain_min = -50;
-    double domain_max = 5;
+void numOutputs::userInputFunction() {
+    // this function is meant to change based on what you want it input :)
+    y = pow(x,3);
+}
+
+void numOutputs::executeFunctionCalculation() {
+    function_res = 5000;
+    domain_min = -3;
+    domain_max = 5;
+    range_min = -10;
+    range_max = 10;
     double function_res_render_increment = (domain_max - domain_min) / function_res;
 
-    double x = domain_min;
-    for (int i = 0; i < function_res + 1; i++) {
-        double y = sin(10 * x) * cos(12 * pow(x, 2)) * exp(-0.1 * pow(x, 2)) +
-            0.4 * tanh(5 * sin(8 * x)) * cos(20 * x) +
-            0.2 * sin(30 * x) * pow(cos(x * x), 2) * sin(x * x * x) +
-            0.15 * sin(50 * x) / (1 + pow(x, 2)) * cos(x * x * 5) *
-            (sin(x * 25) > 0 ? sin(x * 25) : 0.3 * cos(x * 15));
+    x_arr.clear();
+    y_arr.clear();
 
-        x_arr.push_back(x);
-        y_arr.push_back(y);
+    x = domain_min;
+    for (int i = 0; i <= function_res; i++) {
+        userInputFunction();
+
+        // only appends points that exist in the domain, and are within the window boundary
+        if (std::isfinite(y) && y >= range_min && y <= range_max) {
+            x_arr.push_back(x);
+            y_arr.push_back(y);
+        }
 
         x += function_res_render_increment;
     }
-
-    x_min = domain_min;
-    x_max = domain_max;
+    
+    x_min = x_arr[0];
+    x_max = x_arr[x_arr.size() - 1];
     y_min = y_arr[0];
     y_max = y_arr[0];
-    for (double y : y_arr) {
-        if (y < y_min) y_min = y;
-        if (y > y_max) y_max = y;
+    for (double y_val : y_arr) {
+        if (y_val < y_min) y_min = y_val;
+        if (y_val > y_max) y_max = y_val;
     }
 
-    x_range = domain_max - domain_min;
+    x_range = x_max - x_min;
     y_range = y_max - y_min;
 }

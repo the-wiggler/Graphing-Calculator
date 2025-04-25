@@ -22,40 +22,38 @@ int SDL_main(int argc, char* argv[]) {
     // LOOP FOR THE WINDOW PROGRAM                                                                           //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     while (running) {
-        numericalOutputs outputs;
+        numOutputs outputs;
 
         outputs.executeFunctionCalculation();
 
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
-        int prev_x_point;
-        int prev_y_point;
-        for (int i = 0; i <= outputs.function_res; i++) {
+        // This scales and renders the initial points to visualize the function on the graph
+        for (int i = 0; i < outputs.x_arr.size(); i++) {
             int scaled_x_point = static_cast<int>((outputs.x_arr[i] - outputs.x_min) * WINDOW_SIZE_X / outputs.x_range);
             int scaled_y_point = static_cast<int>(WINDOW_SIZE_Y - (outputs.y_arr[i] - outputs.y_min) * WINDOW_SIZE_Y / outputs.y_range);
 
-            if (i > 0) { SDL_RenderDrawLine(renderer, prev_x_point, prev_y_point, scaled_x_point, scaled_y_point); }
+            if (i > 0) { SDL_RenderDrawPoint(renderer, scaled_x_point, scaled_y_point); }
 
-            prev_x_point = scaled_x_point;
-            prev_y_point = scaled_y_point;
         }
 
-        SDL_RenderPresent(renderer);
+        outputs.x = 0;
 
+        SDL_RenderPresent(renderer);
 
         // stops the rendering loop until a certain command is executed
         bool wait_for_reset = true;
         while (wait_for_reset) {
-            while (SDL_PollEvent(&event)) {
+            if (SDL_WaitEvent(&event)) {
                 // quits the program
                 if (event.type == SDL_QUIT) {
                     running = false;
                     wait_for_reset = false;
+                }
                 // re-renders the function when the letter "r" is pressed
-                } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r) {
+                else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r) {
                     wait_for_reset = false;
                 }
-                SDL_Delay(16);
             }
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
