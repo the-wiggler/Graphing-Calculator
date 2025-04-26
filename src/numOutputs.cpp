@@ -9,13 +9,6 @@ void numOutputs::userInputFunction() {
 }
 
 void numOutputs::executeFunctionCalculation() {
-    const int FUNC_RES = 5000;
-    const float DOMAIN_MIN = -5;
-    const float DOMAIN_MAX = 5;
-    const float RANGE_MIN = -1;
-    const float RANGE_MAX = 1;
-    const double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
-
     // output arrays
     x_arr.clear();
     y_arr.clear();
