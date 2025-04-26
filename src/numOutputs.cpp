@@ -5,42 +5,48 @@
 
 void numOutputs::userInputFunction() {
     // this function is meant to change based on what you want it input :)
-    y = pow(x,3);
+    y = sin(x);
 }
 
 void numOutputs::executeFunctionCalculation() {
-    function_res = 5000;
-    domain_min = -3;
-    domain_max = 5;
-    range_min = -10;
-    range_max = 10;
-    double function_res_render_increment = (domain_max - domain_min) / function_res;
+    const int FUNC_RES = 5000;
+    const float DOMAIN_MIN = -5;
+    const float DOMAIN_MAX = 5;
+    const float RANGE_MIN = -1;
+    const float RANGE_MAX = 1;
+    const double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 
+    // output arrays
     x_arr.clear();
     y_arr.clear();
 
-    x = domain_min;
-    for (int i = 0; i <= function_res; i++) {
+    // updates to true when the function is seen in the domain
+    func_valid = false;
+
+    x = DOMAIN_MIN;
+    for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
         userInputFunction();
 
         // only appends points that exist in the domain, and are within the window boundary
-        if (std::isfinite(y) && y >= range_min && y <= range_max) {
+        if (y >= RANGE_MIN && y <= RANGE_MAX) {
+            func_valid = true;
             x_arr.push_back(x);
             y_arr.push_back(y);
         }
-
-        x += function_res_render_increment;
     }
     
-    x_min = x_arr[0];
-    x_max = x_arr[x_arr.size() - 1];
-    y_min = y_arr[0];
-    y_max = y_arr[0];
-    for (double y_val : y_arr) {
-        if (y_val < y_min) y_min = y_val;
-        if (y_val > y_max) y_max = y_val;
-    }
+    // calculates min and max for the x array and y array
+    if (func_valid) {
+        x_min = x_arr.front();
+        x_max = x_arr.back();
+        y_min = y_max = y_arr.front();
+        for (double yy : y_arr) {
+            if (yy < y_min) y_min = yy;
+            if (yy > y_max) y_max = yy;
+        }
 
-    x_range = x_max - x_min;
-    y_range = y_max - y_min;
+        // range of the function
+        x_range = x_max - x_min;
+        y_range = y_max - y_min;
+    }
 }

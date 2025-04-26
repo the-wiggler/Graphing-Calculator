@@ -18,6 +18,7 @@ int SDL_main(int argc, char* argv[]) {
 
     bool running = true;
 
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // LOOP FOR THE WINDOW PROGRAM                                                                           //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,13 +30,28 @@ int SDL_main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
         // This scales and renders the initial points to visualize the function on the graph
-        for (int i = 0; i < outputs.x_arr.size(); i++) {
-            int scaled_x_point = static_cast<int>((outputs.x_arr[i] - outputs.x_min) * WINDOW_SIZE_X / outputs.x_range);
-            int scaled_y_point = static_cast<int>(WINDOW_SIZE_Y - (outputs.y_arr[i] - outputs.y_min) * WINDOW_SIZE_Y / outputs.y_range);
+        if (outputs.func_valid) {
+            // finds the scale that the points should be transformed to
+            float scale_x = WINDOW_SIZE_X / outputs.x_range;
+            float scale_y = WINDOW_SIZE_Y / outputs.y_range;
+            float scale = std::min(scale_x, scale_y);
 
-            if (i > 0) { SDL_RenderDrawPoint(renderer, scaled_x_point, scaled_y_point); }
+            for (int i = 0; i < outputs.x_arr.size(); i++) {
+                int px = static_cast<int>( (outputs.x_arr[i] - outputs.x_min) * scale );
+                int py = static_cast<int>( WINDOW_SIZE_Y - (outputs.y_arr[i] - outputs.y_min) * scale);
 
+                //int scaled_x_point = static_cast<int>((outputs.x_arr[i] - outputs.x_min) * WINDOW_SIZE_X / outputs.x_range);
+                //int scaled_y_point = static_cast<int>(WINDOW_SIZE_Y - (outputs.y_arr[i] - outputs.y_min) * WINDOW_SIZE_Y / outputs.y_range);
+                // at some point you should make this append to an array to be rendered instead of graphing every point individually
+                if (i > 0) { SDL_RenderDrawPoint(renderer, px, py); }
+
+            }
         }
+        else {
+            std::cout << "ERROR: FUNCTION NOT WITHIN RANGE" << std::endl;
+        }
+
+        //SDL_RenderDrawLine(renderer, )
 
         outputs.x = 0;
 
@@ -61,7 +77,6 @@ int SDL_main(int argc, char* argv[]) {
         SDL_RenderPresent(renderer);
 
     }
-
 
 return 0;
 }
