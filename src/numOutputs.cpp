@@ -5,7 +5,7 @@
 
 void numOutputs::userInputFunction() {
     // this function is meant to change based on what you want it input :)
-    y = sin(x);
+    y = x * x - 5;
 }
 
 void numOutputs::executeFunctionCalculation() {
@@ -13,16 +13,13 @@ void numOutputs::executeFunctionCalculation() {
     x_arr.clear();
     y_arr.clear();
 
-    // updates to true when the function is seen in the domain
-    func_valid = false;
-
     x = DOMAIN_MIN;
     for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
         userInputFunction();
 
         // only appends points that exist in the domain, and are within the window boundary
         if (y >= RANGE_MIN && y <= RANGE_MAX) {
-            func_valid = true;
+            func_valid = true; // makes the function valid (value stored in numOutputs.hpp)
             x_arr.push_back(x);
             y_arr.push_back(y);
         }

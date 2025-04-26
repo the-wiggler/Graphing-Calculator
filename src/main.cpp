@@ -23,7 +23,7 @@ int SDL_main(int argc, char* argv[]) {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     while (running) {
-        // initializes values of the function
+        // calculates values of the function
         numOutputs outputs;
         outputs.executeFunctionCalculation();
 
@@ -32,23 +32,32 @@ int SDL_main(int argc, char* argv[]) {
 
         // This scales and renders the initial points to visualize the function on the graph
         if (outputs.func_valid) {
-            // finds the uniform scale that the points should be transformed to
-            float scale_x = WINDOW_SIZE_X / outputs.x_range;
-            float scale_y = WINDOW_SIZE_Y / outputs.y_range;
-            float scale = std::min(scale_x, scale_y);
 
-            // draw axes
+            // These lines calculate the position where x=0 and y=0 should be on the screen
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            int x_origin = static_cast<int>((0 + (outputs.RANGE_MAX) * scale));
+            float x_origin = (outputs.RANGE_MAX / outputs.RANGE_INTERVAL) * WINDOW_SIZE_Y;
             SDL_RenderDrawLine(renderer, 0, x_origin, WINDOW_SIZE_X, x_origin);
-            int y_origin = static_cast<int>(outputs.DOMAIN_MIN / (outputs.DOMAIN_MAX - outputs.DOMAIN_MIN) * WINDOW_SIZE_X);
+            float y_origin = (-outputs.DOMAIN_MIN / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X;
             SDL_RenderDrawLine(renderer, y_origin, 0, y_origin, WINDOW_SIZE_Y);
+            // domain tick marks
+            for (int i = 0; i <= outputs.DOMAIN_INTERVAL; i++) {
+                float a = (1 / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X;
+                SDL_RenderDrawLine(renderer, 0 + i * a, x_origin - 5, 0 + i * a, x_origin + 5);
+            }
+            // range tick marks
+            for (int i = 0; i <= outputs.RANGE_INTERVAL; i++) {
+                float a = (1 / outputs.RANGE_INTERVAL) * WINDOW_SIZE_Y;
+                SDL_RenderDrawLine(renderer, y_origin - 5, 0 + i * a, y_origin + 5, 0 + i * a);
+            }
 
             // scales and plots the points onto the screen
             SDL_SetRenderDrawColor(renderer, 50, 50, 255, 255);
             for (int i = 0; i < outputs.x_arr.size(); i++) {
-                int px = static_cast<int>( (outputs.x_arr[i] - outputs.x_min) * scale );
-                int py = static_cast<int>( WINDOW_SIZE_Y - (outputs.y_arr[i] - outputs.y_min) * scale);
+                // Transform x from domain space to screen space
+                int px = static_cast<int>(((outputs.x_arr[i] - outputs.DOMAIN_MIN) / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X);
+
+                // Transform y from range space to screen space
+                int py = static_cast<int>(((outputs.RANGE_MAX - outputs.y_arr[i]) / outputs.RANGE_INTERVAL) * WINDOW_SIZE_Y);
                 SDL_RenderDrawPoint(renderer, px, py);
             }
         }
