@@ -32,6 +32,7 @@ int SDL_main(int argc, char* argv[]) {
 
         SDL_RenderPresent(renderer);
 
+        // keeps the window open while waiting for a new command
         windowMain.keepWindowOpen();
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
