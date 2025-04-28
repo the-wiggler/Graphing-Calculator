@@ -6,7 +6,7 @@
 
 void numOutputs::userInputFunction() {
     // this function is meant to change based on what you want it input :)
-    y = sin(sin(x));
+    y = tan(x) * log(x);
 }
 
 void numOutputs::executeFunctionCalculation() {

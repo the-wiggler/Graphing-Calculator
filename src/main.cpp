@@ -68,7 +68,7 @@ int SDL_main(int argc, char* argv[]) {
             }
 
             // Draw lines between points
-            SDL_RenderDrawLines(renderer, SDL_fpoints.data(), SDL_fpoints.size());
+            SDL_RenderDrawPoints(renderer, SDL_fpoints.data(), SDL_fpoints.size());
 
         }
         else {

@@ -6,7 +6,7 @@
 
 class numOutputs {
 public:
-    const int FUNC_RES = 5000;
+    const int FUNC_RES = 100000;
     const float DOMAIN_MIN = -5;
     const float DOMAIN_MAX = 5;
     const float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
