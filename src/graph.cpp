@@ -7,8 +7,22 @@
 #include <cmath>
 #include <vector>
 
+// create a target texture the size of the window
+static SDL_Texture* makeTargetTexture(SDL_Renderer* r)
+{
+    SDL_Texture* tex = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+    SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+    return tex;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // the function responsible for creating the axes based on the const data from graphing.hpp
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void graphMain::axesRender() {
+    // draw onto the texture
+    SDL_Texture* axesTexture = makeTargetTexture(renderer);
+    SDL_SetRenderTarget(renderer, axesTexture);
+
     numOutputs outputs;
 
     // These lines calculate the position where x=0 and y=0 should be on the screen
@@ -17,6 +31,7 @@ void graphMain::axesRender() {
     SDL_RenderDrawLine(renderer, 0, x_origin, WINDOW_SIZE_X, x_origin);
     float y_origin = (-outputs.DOMAIN_MIN / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X;
     SDL_RenderDrawLine(renderer, y_origin, 0, y_origin, WINDOW_SIZE_Y);
+
     // domain tick marks
     for (int i = 0; i <= outputs.DOMAIN_INTERVAL; i++) {
         float a = (1 / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X;
@@ -27,10 +42,21 @@ void graphMain::axesRender() {
         float a = (1 / outputs.RANGE_INTERVAL) * WINDOW_SIZE_Y;
         SDL_RenderDrawLine(renderer, y_origin - 5, 0 + i * a, y_origin + 5, 0 + i * a);
     }
+
+    // sets back to default and renders
+    SDL_SetRenderTarget(renderer, nullptr);
+    SDL_RenderCopy(renderer, axesTexture, nullptr, nullptr);
+    SDL_DestroyTexture(axesTexture);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // the function responsible for graphing the points onto the window
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void graphMain::functionRender() {
+    // draw onto the texture
+    SDL_Texture* funcTexture = makeTargetTexture(renderer);
+    SDL_SetRenderTarget(renderer, funcTexture);
+
     // calculates values of the function
     numOutputs outputs;
     outputs.executeFunctionCalculation();
@@ -60,4 +86,8 @@ void graphMain::functionRender() {
     else {
         std::cout << "ERROR: FUNCTION NOT WITHIN RANGE" << std::endl;
     }
+
+    SDL_SetRenderTarget(renderer, nullptr);
+    SDL_RenderCopy(renderer, funcTexture, nullptr, nullptr);
+    SDL_DestroyTexture(funcTexture);
 }
