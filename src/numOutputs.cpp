@@ -1,16 +1,17 @@
+// this file is responsible for doing and numerical calculations associated with graphing the function
 #include <iostream>
 #include <SDL2/SDL.h>
-#include "numOutputs.hpp"
+#include "graphing.hpp"
 #include <cmath>
 #include <vector>
 
+// THIS FUNCTION HOLDS THE USER INPUT INFORMATION FOR THE FUNCTION BEING GRAPHED
 void numOutputs::userInputFunction() {
-    // this function is meant to change based on what you want it input :)
-    y = tan(x) * log(x);
+    y = sin(x);
 }
 
+// THIS FUNCTION CALCULATES THE ARRAY OF POINTS, AS WELL AS MIN/MAX FOR THE USER INPUT GRAPH
 void numOutputs::executeFunctionCalculation() {
-
 
     x = DOMAIN_MIN;
     for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
