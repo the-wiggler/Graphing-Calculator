@@ -52,4 +52,15 @@ public:
     void keepWindowOpen();
 };
 
+// THIS IS RESPONSIBLE FOR MANAGING THE UI
+class uiMain {
+public:
+    uiMain(SDL_Renderer* r) : renderer(r) {}
+
+    void commandWindow();
+
+private:
+    SDL_Renderer* renderer;
+};
+
 #endif

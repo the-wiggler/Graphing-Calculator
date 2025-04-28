@@ -2,8 +2,6 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include "graphing.hpp"
-#include <GL/glew.h> 
-#include <SDL2/SDL_opengl.h>
 #include <cmath>
 #include <vector>
 

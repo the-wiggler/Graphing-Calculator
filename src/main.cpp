@@ -1,6 +1,4 @@
 #include <SDL2/SDL.h>
-#include <GL/glew.h> 
-#include <SDL2/SDL_opengl.h>
 #include "graphing.hpp"
 
 
@@ -11,12 +9,14 @@ int SDL_main(int argc, char* argv[]) {
 
     SDL_Window* window = SDL_CreateWindow("Graphing Calculator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_SIZE_X, WINDOW_SIZE_Y, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // LOOP FOR THE WINDOW PROGRAM                                                                           //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     windowMain windowMain;
+    uiMain uiMain(renderer);
 
     while (windowMain.running) {
 
@@ -29,6 +29,8 @@ int SDL_main(int argc, char* argv[]) {
         graphMain.axesRender();
         // renders the funcion points
         graphMain.functionRender();
+        // renders the command window
+        uiMain.commandWindow();
 
         SDL_RenderPresent(renderer);
 

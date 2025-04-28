@@ -1,6 +1,4 @@
 // this file is responsible for doing and numerical calculations associated with graphing the function
-#include <iostream>
-#include <SDL2/SDL.h>
 #include "graphing.hpp"
 #include <cmath>
 #include <vector>
