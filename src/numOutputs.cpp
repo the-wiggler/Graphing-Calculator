@@ -5,7 +5,7 @@
 
 void numOutputs::userInputFunction() {
     // this function is meant to change based on what you want it input :)
-    y = x * x - 5;
+    y = tan(x) * pow(x,18);
 }
 
 void numOutputs::executeFunctionCalculation() {

@@ -10,7 +10,7 @@ public:
     const float DOMAIN_MAX = 5;
     const float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
     const float RANGE_MIN = -5;
-    const float RANGE_MAX = 2;
+    const float RANGE_MAX = 10;
     const float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
     const double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 

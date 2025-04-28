@@ -30,6 +30,7 @@ int SDL_main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
+
         // This scales and renders the initial points to visualize the function on the graph
         if (outputs.func_valid) {
 
@@ -50,16 +51,25 @@ int SDL_main(int argc, char* argv[]) {
                 SDL_RenderDrawLine(renderer, y_origin - 5, 0 + i * a, y_origin + 5, 0 + i * a);
             }
 
+
             // scales and plots the points onto the screen
+            std::vector<SDL_Point> SDL_fpoints;
+            SDL_fpoints.reserve(outputs.x_arr.size());
+
             SDL_SetRenderDrawColor(renderer, 50, 50, 255, 255);
             for (int i = 0; i < outputs.x_arr.size(); i++) {
                 // Transform x from domain space to screen space
-                int px = static_cast<int>(((outputs.x_arr[i] - outputs.DOMAIN_MIN) / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X);
+                int px = ((outputs.x_arr[i] - outputs.DOMAIN_MIN) / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X;
 
                 // Transform y from range space to screen space
-                int py = static_cast<int>(((outputs.RANGE_MAX - outputs.y_arr[i]) / outputs.RANGE_INTERVAL) * WINDOW_SIZE_Y);
-                SDL_RenderDrawPoint(renderer, px, py);
+                int py = ((outputs.RANGE_MAX - outputs.y_arr[i]) / outputs.RANGE_INTERVAL) * WINDOW_SIZE_Y;
+
+                SDL_fpoints.push_back({ px, py });
             }
+
+            // Draw lines between points
+            SDL_RenderDrawLines(renderer, SDL_fpoints.data(), SDL_fpoints.size());
+
         }
         else {
             std::cout << "ERROR: FUNCTION NOT WITHIN RANGE" << std::endl;
@@ -87,6 +97,7 @@ int SDL_main(int argc, char* argv[]) {
                 }
             }
         }
+
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
