@@ -54,15 +54,15 @@ int SDL_main(int argc, char* argv[]) {
 
             // scales and plots the points onto the screen
             std::vector<SDL_Point> SDL_fpoints;
-            SDL_fpoints.reserve(outputs.x_arr.size());
+            SDL_fpoints.reserve(outputs.fpoints.size());
 
             SDL_SetRenderDrawColor(renderer, 50, 50, 255, 255);
-            for (int i = 0; i < outputs.x_arr.size(); i++) {
+            for (int i = 0; i < outputs.fpoints.size(); i++) {
                 // Transform x from domain space to screen space
-                int px = ((outputs.x_arr[i] - outputs.DOMAIN_MIN) / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X;
+                int px = ((outputs.fpoints[i].x - outputs.DOMAIN_MIN) / outputs.DOMAIN_INTERVAL) * WINDOW_SIZE_X;
 
                 // Transform y from range space to screen space
-                int py = ((outputs.RANGE_MAX - outputs.y_arr[i]) / outputs.RANGE_INTERVAL) * WINDOW_SIZE_Y;
+                int py = ((outputs.RANGE_MAX - outputs.fpoints[i].y) / outputs.RANGE_INTERVAL) * WINDOW_SIZE_Y;
 
                 SDL_fpoints.push_back({ px, py });
             }

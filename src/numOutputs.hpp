@@ -2,6 +2,7 @@
 #define NUM_OUTPUTS_HPP
 
 #include <vector>
+#include <SDL2/SDL.h>
 
 class numOutputs {
 public:
@@ -14,7 +15,11 @@ public:
     const float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
     const double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 
-    std::vector<double> x_arr, y_arr;
+    typedef struct coordinate {
+        double x, y;
+    } coordinate;
+    std::vector<coordinate> fpoints;
+
     double y_min, y_max, x_min, x_max, x_range, y_range, x, y = 0.0;
     bool func_valid = false;
 
