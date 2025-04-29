@@ -5,8 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SDL2 REQUIRED CONFIG)
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
+find_package(SDL2_ttf CONFIG REQUIRED)
 
 include_directories(src)
 
@@ -21,8 +20,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     SDL2::SDL2main
     SDL2::SDL2
-    OpenGL::GL
-    GLEW::GLEW
+    SDL2_ttf::SDL2_ttf
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
