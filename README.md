@@ -4,3 +4,4 @@ calculations and have other more computationally expensive tasks available.
 
 Dependencies to compile:
 * SDL2
+* SDL2_ttf
