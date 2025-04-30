@@ -5,24 +5,37 @@
 #include <vector>
 #include <SDL2/SDL.h>
 
+
 #define WINDOW_SIZE_X 1000
-#define WINDOW_SIZE_Y 800
+#define WINDOW_SIZE_Y 1000
+
+static SDL_Color black = { 0, 0, 0, 255 };
+
+typedef struct coordinate {
+    double x, y;
+} coordinate;
+
+
+inline int FUNC_RES = 1000;
+inline float DOMAIN_MIN = -10;
+inline float DOMAIN_MAX = 10;
+inline float RANGE_MIN = -10;
+inline float RANGE_MAX = 10;
+inline float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
+inline float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
+inline double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
+
+inline void recalculateRange() {
+    DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
+    RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
+    INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
+}
+
+
 
 // THIS IS RESPONSIBLE FOR HOLDING THE MATHEMATICAL ARRAY DATA
 class numOutputs {
 public:
-    int FUNC_RES = 1000;
-    float DOMAIN_MIN = -10;
-    float DOMAIN_MAX = 10;
-    float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
-    float RANGE_MIN = -10;
-    float RANGE_MAX = 10;
-    float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
-    double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
-
-    typedef struct coordinate {
-        double x, y;
-    } coordinate;
     std::vector<coordinate> fpoints;
 
     double y_min, y_max, x_min, x_max, x_range, y_range, x, y = 0.0;
@@ -54,6 +67,7 @@ public:
 
     void commandWindow();
     void textInput();
+    void commands();
 
 private:
     SDL_Renderer* renderer;

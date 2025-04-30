@@ -1,20 +1,40 @@
 ﻿#include <iostream>
+#include <sstream>
+#include <string>
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 #include "graphing.hpp"
 
+std::string inputText = "";
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// available commands
+////////////////////////////////////////////////////////////////////////////////////////////
+void uiMain::commands() {
+    std::istringstream str(inputText);
+    std::string cmd;
+    float value;
+
+    if (str >> cmd >> value) {
+        if (cmd == "xmax") DOMAIN_MAX = value;
+        else if (cmd == "xmin") DOMAIN_MIN = value;
+        else if (cmd == "ymax") RANGE_MAX = value;
+        else if (cmd == "ymin") RANGE_MIN = value;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// collects text input
+////////////////////////////////////////////////////////////////////////////////////////////
 void uiMain::textInput() {
     TTF_Font* asana = TTF_OpenFont("asana.ttf", 12);
 
     SDL_StartTextInput();
     bool quit = false;
     SDL_Event e;
-    std::string inputText = "";
 
     // the text area
     SDL_Rect textRect = { 10, 105, 300, 20 };
-
-    // loop that collects text input
     while (!quit) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
@@ -32,11 +52,16 @@ void uiMain::textInput() {
                 else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
                     inputText = SDL_GetClipboardText();
                 }
+
+                // all of the supported commands that can be entered into the command window
                 else if (e.key.keysym.sym == SDLK_RETURN) {
                     std::cout << "COMMAND INPUT: " << inputText << std::endl;
+
+                    commands();
+
                     inputText.clear();
+                    recalculateRange();
                     quit = true;
-                    break;
                 }
             }
         }
@@ -60,10 +85,15 @@ void uiMain::textInput() {
         SDL_Delay(16);
     }
 
+    SDL_RenderClear(renderer);
     SDL_StopTextInput();
     TTF_CloseFont(asana);
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// UI feature that holds the background for the command window
+////////////////////////////////////////////////////////////////////////////////////////////
 void uiMain::commandWindow() {
     // draw onto the texture
     SDL_Texture* commandTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
@@ -77,14 +107,10 @@ void uiMain::commandWindow() {
     SDL_Rect cmdBox = { 5, 5, 300, 120 };
     SDL_RenderFillRect(renderer, &cmdBox);
 
-    // load font
-    TTF_Font* asana = TTF_OpenFont("asana.ttf", 12);
-
     // sets back to default and renders
     SDL_SetRenderTarget(renderer, nullptr);
     SDL_RenderCopy(renderer, commandTexture, nullptr, &cmdBox);
     //SDL_DestroyTexture(commandTexture);
 
     textInput();
-
 }
