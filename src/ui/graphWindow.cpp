@@ -17,11 +17,10 @@ static SDL_Texture* makeTargetTexture(SDL_Renderer* r)
 // the function responsible for creating the axes based on the const data from graphing.hpp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void graphMain::axesRender() {
+    numOutputs outputs;
     // draw onto the texture
     SDL_Texture* axesTexture = makeTargetTexture(renderer);
     SDL_SetRenderTarget(renderer, axesTexture);
-
-    numOutputs outputs;
 
     // These lines calculate the position where x=0 and y=0 should be on the screen
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -51,12 +50,12 @@ void graphMain::axesRender() {
 // the function responsible for graphing the points onto the window
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void graphMain::functionRender() {
+    numOutputs outputs;
     // draw onto the texture
     SDL_Texture* funcTexture = makeTargetTexture(renderer);
     SDL_SetRenderTarget(renderer, funcTexture);
 
     // calculates values of the function
-    numOutputs outputs;
     outputs.executeFunctionCalculation();
 
     // This scales and renders the initial points to visualize the function on the graph

@@ -11,10 +11,9 @@ include_directories(src)
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
-    src/numOutputs.cpp
-    src/window.cpp
-    src/graphWindow.cpp
-    src/ui.cpp
+    src/backend/numOutputs.cpp
+    src/ui/graphWindow.cpp
+    src/ui/ui.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

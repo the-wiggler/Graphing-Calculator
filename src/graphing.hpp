@@ -11,14 +11,14 @@
 // THIS IS RESPONSIBLE FOR HOLDING THE MATHEMATICAL ARRAY DATA
 class numOutputs {
 public:
-    const int FUNC_RES = 1000;
-    const float DOMAIN_MIN = -5;
-    const float DOMAIN_MAX = 5;
-    const float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
-    const float RANGE_MIN = -5;
-    const float RANGE_MAX = 3;
-    const float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
-    const double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
+    int FUNC_RES = 1000;
+    float DOMAIN_MIN = -10;
+    float DOMAIN_MAX = 10;
+    float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
+    float RANGE_MIN = -10;
+    float RANGE_MAX = 10;
+    float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
+    double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 
     typedef struct coordinate {
         double x, y;
@@ -45,22 +45,19 @@ private:
     SDL_Renderer* renderer;
 };
 
-// THIS IS RESOPNSIBLE FOR MANAGING THE WINDOW
-class windowMain {
-public:
-    bool running = true;
-    void keepWindowOpen();
-};
-
 // THIS IS RESPONSIBLE FOR MANAGING THE UI
 class uiMain {
 public:
     uiMain(SDL_Renderer* r) : renderer(r) {}
 
+    bool running = true;
+
     void commandWindow();
+    void textInput();
 
 private:
     SDL_Renderer* renderer;
 };
 
 #endif
+

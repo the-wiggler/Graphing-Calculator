@@ -2,6 +2,7 @@
 #include "graphing.hpp"
 #include <cmath>
 #include <vector>
+#include <SDL2/SDL.h>
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // THIS FUNCTION HOLDS THE USER INPUT INFORMATION FOR THE FUNCTION BEING GRAPHED
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,6 +23,10 @@ void numOutputs::executeFunctionCalculation() {
         if (y >= RANGE_MIN && y <= RANGE_MAX) {
             func_valid = true; // makes the function valid (value stored in numOutputs.hpp)
             fpoints.push_back({ x, y });
+        }
+        else {
+            SDL_ShowSimpleMessageBox(0x00000020, "Graphing Calculator", "Warning: Function is out of range to be displayed", NULL);
+            break;
         }
     }
     

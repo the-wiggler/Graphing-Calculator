@@ -16,34 +16,30 @@ int SDL_main(int argc, char* argv[]) {
 
     TTF_Font* asana = TTF_OpenFont("asana.ttf", 24);
     if (!asana) {
-        std::cout << "FONT LOAD ERROR: " << TTF_GetError() << std::endl;
+        SDL_ShowSimpleMessageBox(0x00000010, "Graphing Calculator", "ERROR: FONT FILE <asana.ttf> NOT FOUND", NULL);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // LOOP FOR THE WINDOW PROGRAM                                                                           //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    windowMain windowMain;
     uiMain uiMain(renderer);
 
-    while (windowMain.running) {
+    while (uiMain.running) {
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         // creates an instance of graphMain -- the rendering solution to display the graph
-        graphMain graphMain(renderer);
+        graphMain graph(renderer);
         // renders the axes
-        graphMain.axesRender();
+        graph.axesRender();
         // renders the funcion points
-        graphMain.functionRender();
-        // renders the command window
-        uiMain.commandWindow();
-
+        graph.functionRender();
         SDL_RenderPresent(renderer);
 
-        // keeps the window open while waiting for a new command
-        windowMain.keepWindowOpen();
+        // renders the command window
+        uiMain.commandWindow();
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -51,6 +47,7 @@ int SDL_main(int argc, char* argv[]) {
 
     }
 
+    TTF_CloseFont(asana);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();
