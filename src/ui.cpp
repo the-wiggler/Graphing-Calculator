@@ -10,17 +10,40 @@ std::string inputText = "";
 ////////////////////////////////////////////////////////////////////////////////////////////
 // available commands
 ////////////////////////////////////////////////////////////////////////////////////////////
-void uiMain::commands() {
+void uiMain::commands()
+{
     std::istringstream str(inputText);
     std::string cmd;
-    float value;
+    double value;
 
-    if (str >> cmd >> value) {
-        if (cmd == "xmax") DOMAIN_MAX = value;
-        else if (cmd == "xmin") DOMAIN_MIN = value;
-        else if (cmd == "ymax") RANGE_MAX = value;
+    if (!(str >> cmd)) return;
+
+    // commands that take a single numeric argument
+    if ((cmd == "xmin" || cmd == "xmax" ||
+        cmd == "ymin" || cmd == "ymax") && (str >> value))
+    {
+        if (cmd == "xmin") DOMAIN_MIN = value;
+        else if (cmd == "xmax") DOMAIN_MAX = value;
         else if (cmd == "ymin") RANGE_MIN = value;
+        else if (cmd == "ymax") RANGE_MAX = value;
+        return; 
     }
+
+    // one-word commands
+    if (cmd == "q") { running = false; return; }
+
+    // function selection
+    if (cmd == "x")     ff = [](double x) { return x; };
+    else if (cmd == "x^2")   ff = [](double x) { return x * x; };
+    else if (cmd == "x^3")   ff = [](double x) { return x * x * x; };
+    else if (cmd == "x^4")   ff = [](double x) { return x * x * x * x; };
+    else if (cmd == "sin(x)")ff = [](double x) { return sin(x); };
+    else if (cmd == "cos(x)")ff = [](double x) { return cos(x); };
+    else if (cmd == "tan(x)")ff = [](double x) { return tan(x); };
+    else if (cmd == "log(x)")ff = [](double x) { return log(x); };
+    else if (cmd == "abs(x)")ff = [](double x) { return std::abs(x); };
+    else return;                         
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

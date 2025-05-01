@@ -3,6 +3,7 @@
 #define GRAPHING
 
 #include <vector>
+#include <functional>
 #include <SDL2/SDL.h>
 
 
@@ -11,12 +12,11 @@
 
 static SDL_Color black = { 0, 0, 0, 255 };
 
-typedef struct coordinate {
-    double x, y;
-} coordinate;
+inline std::function<double(double)> ff = [](double x) {
+    return x;
+};
 
-
-inline int FUNC_RES = 1000;
+inline int FUNC_RES = 10000;
 inline float DOMAIN_MIN = -10;
 inline float DOMAIN_MAX = 10;
 inline float RANGE_MIN = -10;
@@ -31,6 +31,11 @@ inline void recalculateRange() {
     INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 }
 
+typedef struct coordinate {
+    double x, y;
+} coordinate;
+
+
 
 
 // THIS IS RESPONSIBLE FOR HOLDING THE MATHEMATICAL ARRAY DATA
@@ -42,8 +47,6 @@ public:
     bool func_valid = false;
 
     void executeFunctionCalculation();
-    void userInputFunction();
-
 };
 
 // THIS IS RESPONSIBLE FOR GRAPHING THE ARRAY OF FUNCTION DATA ONTO THE WINDOW (USED BY graph.cpp)

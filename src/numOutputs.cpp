@@ -1,25 +1,20 @@
 // this file is responsible for doing and numerical calculations associated with graphing the function
 #include "graphing.hpp"
 #include <cmath>
+#include <functional>
 #include <vector>
 #include <SDL2/SDL.h>
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// THIS FUNCTION HOLDS THE USER INPUT INFORMATION FOR THE FUNCTION BEING GRAPHED
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void numOutputs::userInputFunction() {
-
-    y = sin(x);
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // THIS FUNCTION CALCULATES THE ARRAY OF POINTS, AS WELL AS MIN/MAX FOR THE USER INPUT GRAPH
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void numOutputs::executeFunctionCalculation() {
+    fpoints.clear();
+    func_valid = false;
 
     x = DOMAIN_MIN;
     for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
-        userInputFunction();
+        y = ff(x);
 
         // only appends points that exist in the domain, and are within the window boundary
         if (y >= RANGE_MIN && y <= RANGE_MAX) {
