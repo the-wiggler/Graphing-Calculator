@@ -14,35 +14,40 @@ void uiMain::commands()
 {
     std::istringstream str(inputText);
     std::string cmd;
-    double value;
+    std::string argument;
 
     if (!(str >> cmd)) return;
 
     // commands that take a single numeric argument
-    if ((cmd == "xmin" || cmd == "xmax" ||
-        cmd == "ymin" || cmd == "ymax") && (str >> value))
-    {
-        if (cmd == "xmin") DOMAIN_MIN = value;
-        else if (cmd == "xmax") DOMAIN_MAX = value;
-        else if (cmd == "ymin") RANGE_MIN = value;
-        else if (cmd == "ymax") RANGE_MAX = value;
+    if (cmd == "xmin" || cmd == "xmax" || cmd == "ymin" || cmd == "ymax") {
+        double value;
+        if (!(str >> value)) {
+            std::cout << "ERROR: Expected a numeric argument for '" << cmd << "'\n";
+            return;
+        }
+        if (cmd == "xmin" && !(value >= DOMAIN_MAX))        DOMAIN_MIN = value;
+        else if (cmd == "xmax" && !(value <= DOMAIN_MIN))   DOMAIN_MAX = value;
+        else if (cmd == "ymin" && !(value >= RANGE_MAX))    RANGE_MIN = value;
+        else if (cmd == "ymax" && !(value <= RANGE_MIN))    RANGE_MAX = value;
+        std::cout << cmd << " set to:" << value << "\n";
         return; 
     }
 
     // one-word commands
-    if (cmd == "q") { running = false; return; }
+    if (cmd == "q" || cmd == "quit" || cmd == "exit") { running = false; return; }
+    if (cmd == "help") { std::cout << "Here's a list of all commands:\n" << "q ~ quit\nhelp ~ get list of commands\nxmin ~ set domain minimum\nxmax ~ set domain maximum\nymin ~ set domain minimum\nymax ~ set domain maximum\n"; return; }
 
     // function selection
-    if (cmd == "x")     ff = [](double x) { return x; };
-    else if (cmd == "x^2")   ff = [](double x) { return x * x; };
-    else if (cmd == "x^3")   ff = [](double x) { return x * x * x; };
-    else if (cmd == "x^4")   ff = [](double x) { return x * x * x * x; };
-    else if (cmd == "sin(x)")ff = [](double x) { return sin(x); };
-    else if (cmd == "cos(x)")ff = [](double x) { return cos(x); };
-    else if (cmd == "tan(x)")ff = [](double x) { return tan(x); };
-    else if (cmd == "log(x)")ff = [](double x) { return log(x); };
-    else if (cmd == "abs(x)")ff = [](double x) { return std::abs(x); };
-    else return;                         
+    if (cmd == "=" || cmd == "y=" || cmd == "y") {
+        std::string new_func;
+        while (str) {
+            std::string bf;
+            str >> bf;
+            new_func.append(bf);
+        }
+        std::cout << "Function set to: " << new_func << std::endl;
+
+    }
 
 }
 
