@@ -3,7 +3,6 @@
 #define GRAPHING
 
 #include <iostream>
-#include "graphing.hpp"
 #include <cmath>
 #include <vector>
 #include <string>
@@ -17,7 +16,7 @@
 
 static SDL_Color black = { 0, 0, 0, 255 };
 
-inline std::string ff = "2 * 50 + 2";
+inline std::string ff = "2 + 1 * 3";
 
 inline int FUNC_RES = 10000;
 inline float DOMAIN_MIN = -10;
