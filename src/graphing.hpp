@@ -2,8 +2,13 @@
 #ifndef GRAPHING
 #define GRAPHING
 
+#include <iostream>
+#include "graphing.hpp"
+#include <cmath>
 #include <vector>
-#include <functional>
+#include <string>
+#include <stack>
+#include <sstream>
 #include <SDL2/SDL.h>
 
 
@@ -12,9 +17,7 @@
 
 static SDL_Color black = { 0, 0, 0, 255 };
 
-inline std::function<double(double)> ff = [](double x) {
-    return x;
-};
+inline std::string ff = "2 * 50 + 2";
 
 inline int FUNC_RES = 10000;
 inline float DOMAIN_MIN = -10;
@@ -47,6 +50,8 @@ public:
     bool func_valid = false;
 
     void executeFunctionCalculation();
+    void fInputParser();
+    bool isOperator(char c);
 };
 
 // THIS IS RESPONSIBLE FOR GRAPHING THE ARRAY OF FUNCTION DATA ONTO THE WINDOW (USED BY graph.cpp)

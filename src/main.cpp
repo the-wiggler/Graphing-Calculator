@@ -26,6 +26,8 @@ int SDL_main(int argc, char* argv[]) {
     uiMain uiMain(renderer);
 
     while (uiMain.running) {
+        numOutputs nO;
+        nO.fInputParser();
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);

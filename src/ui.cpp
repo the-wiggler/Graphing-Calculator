@@ -39,14 +39,21 @@ void uiMain::commands()
 
     // function selection
     if (cmd == "=" || cmd == "y=" || cmd == "y") {
+        // assumes every character after cmd as the input function
+        // it also removes whitespace from the input, meaning the user can type with or it
         std::string new_func;
         while (str) {
             std::string bf;
             str >> bf;
             new_func.append(bf);
         }
-        std::cout << "Function set to: " << new_func << std::endl;
+        // new_func now holds the string of our function with no whitespace
 
+        // now we send the value of new_func to the main function string in the header file
+        // so it can be referenced by other parts of the program
+        std::cout << "COMMAND: Function Changed from " << ff << " to ";
+        ff = new_func;
+        std::cout << ff << std::endl;
     }
 
 }
@@ -84,8 +91,10 @@ void uiMain::textInput() {
                 // all of the supported commands that can be entered into the command window
                 else if (e.key.keysym.sym == SDLK_RETURN) {
                     std::cout << "COMMAND INPUT: " << inputText << std::endl;
-
-                    commands();
+                    ////////////////////////////////////////////////////////////////////////
+                    // runs the command window that allows for text input
+                       commands();
+                    ////////////////////////////////////////////////////////////////////////
 
                     inputText.clear();
                     recalculateRange();
