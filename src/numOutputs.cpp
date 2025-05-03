@@ -13,35 +13,35 @@
 // THIS FUNCTION CHANGES THE ff (user input) string into usable mathematical expression for executeFunctionCalculation
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void uiParse::fInputParse() {
-    std::stack<char> operators;
-    std::queue <std::variant<double, char>> expression;
+    std::stack<std::string> operators;
+    std::queue <std::variant<double, std::string>> expression;
 
     std::istringstream fI(ff);
     std::string token;
 
     while (fI >> token) {
+
         // adds to expression if the token is a number
         if (std::isdigit(token.front()) || token.front() == '.') {
             expression.emplace(std::stod(token));
             continue;
         } 
-        else if (token[0] == 'x') {
-            expression.emplace('x');
+        else if (token == "x") {
+            expression.emplace("x");
             continue;
         }
 
-        char op = token[0]; // if it isnt a number, we interpret it as some sort of operator
-
+        // if it isnt a number, we interpret it as some sort of operator
         // operators
-        if (op == '+' || op == '-' || op == '*' || op == '/') {
-            while (!operators.empty()) {
+        else if (token == "+" || token == "-" || token == "*" || token == "/") {
+            while (!operators.empty() && operators.top() != "(") {
                 // operator precedence
                 int prec1;
-                if (op == '+' || op == '-') { prec1 = 1; }
+                if (token == "+" || token == "-") { prec1 = 1; }
                 else { prec1 = 2; }
 
                 int prec2;
-                if (operators.top() == '+' || operators.top() == '-') { prec2 = 1; }
+                if (operators.top() == "+" || operators.top() == "-") { prec2 = 1; }
                 else { prec2 = 2; }
 
                 if (prec2 >= prec1) {
@@ -50,10 +50,26 @@ void uiParse::fInputParse() {
                 }
                 else { break; }
             }
-            operators.push(op);
+            operators.push(token);
             continue;
         }
+
+        // if its not an operator, we check if its a parentheses
+        else if (token == "(") {
+            operators.push(token);
+            continue;
+        }
+        else if (token == ")") {
+            while (operators.top() != "(") {
+                expression.emplace(operators.top());
+                operators.pop();
+            }
+            if (!operators.empty() && operators.top() == "(") {
+                operators.pop();
+            }
+        }
     }
+
     // if any operators remain in the stack, they are pushed into the expression queue
     while (!operators.empty()) {
         expression.emplace(operators.top());
@@ -74,20 +90,22 @@ void uiParse::fInputParse() {
             eval.push(n);
             continue;
         }
-        else if (std::holds_alternative<char>(tok)) {
-            char c = std::get<char>(tok);
+        else if (std::holds_alternative<std::string>(tok)) {
+            std::string c = std::get<std::string>(tok);
+
             // if the character is x, replace x with xi to simulate it being number
-            if (c == 'x') {
+            if (c == "x") {
                 eval.push(xi);
                 continue;
             }
+
             // if the character is an operator, perform operation
-            else if (c == '+' || c == '-' || c == '*' || c == '/') {
+            else if (c == "+" || c == "-" || c == "*" || c == "/") {
                 double right = eval.top(); eval.pop();
                 double left = eval.top(); eval.pop();
                 double result;
 
-                switch (c) {
+                switch (c[0]) {
                 case '+': result = left + right; break;
                 case '-': result = left - right; break;
                 case '*': result = left * right; break;

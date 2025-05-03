@@ -39,7 +39,7 @@ int SDL_main(int argc, char* argv[]) {
         SDL_RenderPresent(renderer);
 
         // renders the command window
-        uiMain.commandWindow();
+        uiMain.textInput();
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);

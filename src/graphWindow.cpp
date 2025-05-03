@@ -25,14 +25,30 @@ void graphMain::axesRender() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
+    //////////////////////////////////////////////////////////////////////////////////
     // These lines calculate the position where x=0 and y=0 should be on the screen
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     float x_origin = (RANGE_MAX / RANGE_INTERVAL) * WINDOW_SIZE_Y;
-    SDL_RenderDrawLine(renderer, 0, x_origin, WINDOW_SIZE_X, x_origin);
     float y_origin = (-DOMAIN_MIN / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
-    SDL_RenderDrawLine(renderer, y_origin, 0, y_origin, WINDOW_SIZE_Y);
+    //
+    //////////////////////////////////////////////////////////////////////////////////
+    
+    //////////////////////////////////////////////////////////////////////////////////
+    // graph reference lines
+    SDL_SetRenderDrawColor(renderer, 55, 55, 55, 255);
+    for (int i = 0; i <= DOMAIN_INTERVAL; i++) {
+        float a = (1 / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
+        SDL_RenderDrawLine(renderer, 0 + i * a, 0, 0 + i * a, WINDOW_SIZE_X);
+    }
+    for (int i = 0; i <= RANGE_INTERVAL; i++) {
+        float a = (1 / RANGE_INTERVAL) * WINDOW_SIZE_Y;
+        SDL_RenderDrawLine(renderer, 0, 0 + i * a, WINDOW_SIZE_Y, 0 + i * a);
+    }
+    //
+    //////////////////////////////////////////////////////////////////////////////////
 
+    //////////////////////////////////////////////////////////////////////////////////
     // domain tick marks
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     for (int i = 0; i <= DOMAIN_INTERVAL; i++) {
         float a = (1 / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
         SDL_RenderDrawLine(renderer, 0 + i * a, x_origin - 5, 0 + i * a, x_origin + 5);
@@ -42,6 +58,12 @@ void graphMain::axesRender() {
         float a = (1 / RANGE_INTERVAL) * WINDOW_SIZE_Y;
         SDL_RenderDrawLine(renderer, y_origin - 5, 0 + i * a, y_origin + 5, 0 + i * a);
     }
+    //
+    //////////////////////////////////////////////////////////////////////////////////
+
+    // this draws the axis lines if they're applicable within the given domain/range
+    SDL_RenderDrawLine(renderer, 0, x_origin, WINDOW_SIZE_X, x_origin);
+    SDL_RenderDrawLine(renderer, y_origin, 0, y_origin, WINDOW_SIZE_Y);
 
     // sets back to default and renders
     SDL_SetRenderTarget(renderer, nullptr);

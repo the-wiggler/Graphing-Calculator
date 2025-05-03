@@ -40,19 +40,21 @@ void uiMain::commands()
     // function selection
     if (cmd == "=" || cmd == "y=" || cmd == "y") {
         // assumes every character after cmd as the input function
-        // it also removes whitespace from the input, meaning the user can type with or it
         std::string new_func;
         
         str >> std::ws;
-
         std::getline(str, new_func);
-        // new_func now holds the string of our function with no whitespace
 
-        // now we send the value of new_func to the main function string in the header file
-        // so it can be referenced by other parts of the program
-        std::cout << "COMMAND: Function Changed from " << ff << " to ";
-        ff = new_func;
-        std::cout << ff << std::endl;
+        if (new_func.length() > 0) {
+            // now we send the value of new_func to the main function string in the header file
+            // This way it can be referenced by other parts of the program
+            std::cout << "COMMAND: Function Changed from " << ff << " to ";
+            ff = new_func;
+            std::cout << ff << std::endl;
+        }
+        else {
+            std::cerr << "ERROR: Invalid Function Input\n";
+        }
     }
 
 }
@@ -61,14 +63,14 @@ void uiMain::commands()
 // collects text input
 ////////////////////////////////////////////////////////////////////////////////////////////
 void uiMain::textInput() {
-    TTF_Font* asana = TTF_OpenFont("asana.ttf", 12);
+    TTF_Font* asana = TTF_OpenFont("asana.ttf", 18);
 
     SDL_StartTextInput();
     bool quit = false;
     SDL_Event e;
 
     // the text area
-    SDL_Rect textRect = { 10, 105, 300, 20 };
+    SDL_Rect textRect = { 10, 20, 300, 25 };
     while (!quit) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
@@ -124,29 +126,4 @@ void uiMain::textInput() {
     SDL_RenderClear(renderer);
     SDL_StopTextInput();
     TTF_CloseFont(asana);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// UI feature that holds the background for the command window
-////////////////////////////////////////////////////////////////////////////////////////////
-void uiMain::commandWindow() {
-    // draw onto the texture
-    SDL_Texture* commandTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
-        300,
-        120);
-    SDL_SetTextureBlendMode(commandTexture, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderTarget(renderer, commandTexture);
-
-    // draw the background
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 80);
-    SDL_Rect cmdBox = { 5, 5, 300, 120 };
-    SDL_RenderFillRect(renderer, &cmdBox);
-
-    // sets back to default and renders
-    SDL_SetRenderTarget(renderer, nullptr);
-    SDL_RenderCopy(renderer, commandTexture, nullptr, &cmdBox);
-    //SDL_DestroyTexture(commandTexture);
-
-    textInput();
 }
