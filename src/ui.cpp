@@ -42,11 +42,10 @@ void uiMain::commands()
         // assumes every character after cmd as the input function
         // it also removes whitespace from the input, meaning the user can type with or it
         std::string new_func;
-        while (str) {
-            std::string bf;
-            str >> bf;
-            new_func.append(bf);
-        }
+        
+        str >> std::ws;
+
+        std::getline(str, new_func);
         // new_func now holds the string of our function with no whitespace
 
         // now we send the value of new_func to the main function string in the header file

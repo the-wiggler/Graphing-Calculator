@@ -16,7 +16,7 @@
 
 static SDL_Color black = { 0, 0, 0, 255 };
 
-inline std::string ff = "2 + 1 * 3";
+inline std::string ff = "x";
 
 inline int FUNC_RES = 10000;
 inline float DOMAIN_MIN = -10;
@@ -49,8 +49,14 @@ public:
     bool func_valid = false;
 
     void executeFunctionCalculation();
-    void fInputParser();
-    bool isOperator(char c);
+};
+
+// THIS IS RESPONSIBLE FOR PARSING INPUT DATA FROM THE UI INTO MACHINE READABLE INFORMATION
+class uiParse {
+public:
+    void fInputParse();
+    double f_val;
+    double xi; // NOTE: YOU'RE REQUIRED TO DEFINE A VALUE FOR xi BEFORE THE FUNCTION EXECUTES
 };
 
 // THIS IS RESPONSIBLE FOR GRAPHING THE ARRAY OF FUNCTION DATA ONTO THE WINDOW (USED BY graph.cpp)
