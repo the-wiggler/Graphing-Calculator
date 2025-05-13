@@ -9,63 +9,65 @@
 #include <sstream>
 #include <variant>
 #include <SDL2/SDL.h>
+
+std::stack<std::string> operators;
+std::queue <std::variant<double, std::string>> expression;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // THIS FUNCTION CHANGES THE ff (user input) string into usable mathematical expression for executeFunctionCalculation
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void uiParse::fInputParse() {
-    std::stack<std::string> operators;
-    std::queue <std::variant<double, std::string>> expression;
 
     std::istringstream fI(ff);
     std::string token;
 
-    while (fI >> token) {
+    for (size_t i = 0; i < ff.length(); ++i) {
+        char c = ff[i];
 
-        // adds to expression if the token is a number
-        if (std::isdigit(token.front()) || token.front() == '.') {
+        // skip spaces if user input them for some reason
+        if (std::isspace(c)) continue;
+
+        // if it's a digit or decimal, parse a full number
+        if (std::isdigit(c) || c == '.') {
+            token.clear();
+            while (i < ff.length() && (std::isdigit(ff[i]) || ff[i] == '.')) {
+                token += ff[i++];
+            }
+            --i; // step back one char
             expression.emplace(std::stod(token));
-            continue;
-        } 
-        else if (token == "x") {
-            expression.emplace("x");
-            continue;
         }
 
-        // if it isnt a number, we interpret it as some sort of operator
-        // operators
-        else if (token == "+" || token == "-" || token == "*" || token == "/") {
-            while (!operators.empty() && operators.top() != "(") {
-                // operator precedence
-                int prec1;
-                if (token == "+" || token == "-") { prec1 = 1; }
-                else { prec1 = 2; }
+        // if it is a variable
+        else if (std::isalpha(c)) {
+            token = c;
+            expression.emplace(token);
+        }
 
-                int prec2;
-                if (operators.top() == "+" || operators.top() == "-") { prec2 = 1; }
-                else { prec2 = 2; }
+        // if it is an operator or parenthesis
+        else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')') {
+            token = c;
 
-                if (prec2 >= prec1) {
+            if (token == "(") {
+                operators.push(token);
+            }
+            else if (token == ")") {
+                while (!operators.empty() && operators.top() != "(") {
                     expression.emplace(operators.top());
                     operators.pop();
                 }
-                else { break; }
+                if (!operators.empty() && operators.top() == "(")
+                    operators.pop();
             }
-            operators.push(token);
-            continue;
-        }
-
-        // if its not an operator, we check if its a parentheses
-        else if (token == "(") {
-            operators.push(token);
-            continue;
-        }
-        else if (token == ")") {
-            while (operators.top() != "(") {
-                expression.emplace(operators.top());
-                operators.pop();
-            }
-            if (!operators.empty() && operators.top() == "(") {
-                operators.pop();
+            else {
+                while (!operators.empty() && operators.top() != "(") {
+                    int prec1 = (token == "+" || token == "-") ? 1 : 2;
+                    int prec2 = (operators.top() == "+" || operators.top() == "-") ? 1 : 2;
+                    if (prec2 >= prec1) {
+                        expression.emplace(operators.top());
+                        operators.pop();
+                    } else break;
+                }
+                operators.push(token);
             }
         }
     }
@@ -75,9 +77,13 @@ void uiParse::fInputParse() {
         expression.emplace(operators.top());
         operators.pop();
     }
+}
 
-
-    // evaluates the newly created mathematical structure by inputting a value of xi
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// THIS EVALUATES THE FINAL FUNCTION VALUES OF THE ALGEBRAIC QUEUE CREATED BY FINPUTPARSE (expression)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void numOutputs::executeParseCalc() {
+        // evaluates the newly created mathematical structure by inputting a value of xi
     std::stack<double> eval;
     
     while (!expression.empty()) {
@@ -119,7 +125,6 @@ void uiParse::fInputParse() {
     f_val = eval.top();
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // THIS FUNCTION CALCULATES THE ARRAY OF POINTS, AS WELL AS MIN/MAX FOR THE USER INPUT GRAPH
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,9 +136,10 @@ void numOutputs::executeFunctionCalculation() {
 
     x = DOMAIN_MIN;
     for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
-        par.xi = x;
+        xi = x;
         par.fInputParse();
-        y = par.f_val;
+        executeParseCalc();
+        y = f_val;
 
         // only appends points that exist in the domain, and are within the window boundary
         if (y >= RANGE_MIN && y <= RANGE_MAX) {
