@@ -15,9 +15,9 @@ int main(int argc, char* argv[]) {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    TTF_Font* asana = TTF_OpenFont("asana.ttf", 24);
-    if (!asana) {
-        SDL_ShowSimpleMessageBox(0x00000010, "Graphing Calculator", "ERROR: FONT FILE <asana.ttf> NOT FOUND", NULL);
+    TTF_Font* font = TTF_OpenFont("font.ttf", 24);
+    if (!font) {
+        SDL_ShowSimpleMessageBox(0x00000010, "Graphing Calculator", "ERROR: FONT FILE <font.ttf> NOT FOUND", NULL);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
         SDL_Delay(64); // hardcoded FPS limit (yikes!)
     }
 
-    TTF_CloseFont(asana);
+    TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();

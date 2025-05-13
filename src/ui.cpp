@@ -63,14 +63,14 @@ void uiMain::commands()
 // collects text input
 ////////////////////////////////////////////////////////////////////////////////////////////
 void uiMain::textInput() {
-    TTF_Font* asana = TTF_OpenFont("asana.ttf", 18);
+    TTF_Font* font = TTF_OpenFont("font.ttf", WINDOW_SIZE_Y/24);
 
     SDL_StartTextInput();
     bool quit = false;
     SDL_Event e;
 
     // the text area
-    SDL_Rect textRect = { 10, 20, 300, 25 };
+    SDL_Rect textRect = { 10, 10, WINDOW_SIZE_X/3, WINDOW_SIZE_Y/20 };
     while (!quit) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
@@ -111,7 +111,7 @@ void uiMain::textInput() {
         // only updates the screen if there is something in the string
         if (!inputText.empty()) {
             SDL_Color textColor = { 0, 0, 0, 255 };
-            SDL_Surface* textSurface = TTF_RenderText_Solid(asana, inputText.c_str(), textColor);
+            SDL_Surface* textSurface = TTF_RenderText_Solid(font, inputText.c_str(), textColor);
             SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
             SDL_Rect renderQuad = { textRect.x, textRect.y, textSurface->w, textSurface->h };
             SDL_RenderCopy(renderer, textTexture, nullptr, &renderQuad);
@@ -124,5 +124,5 @@ void uiMain::textInput() {
         break;
     }
     SDL_StopTextInput();
-    TTF_CloseFont(asana);
+    TTF_CloseFont(font);
 }

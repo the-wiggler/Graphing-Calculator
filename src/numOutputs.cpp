@@ -137,8 +137,8 @@ void numOutputs::executeFunctionCalculation() {
     x = DOMAIN_MIN;
     for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
         xi = x;
-        par.fInputParse();
-        executeParseCalc();
+        par.fInputParse(); // its pretty inefficient to reparse this every time this should be fixed
+        executeParseCalc(); 
         y = f_val;
 
         // only appends points that exist in the domain, and are within the window boundary
