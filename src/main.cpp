@@ -1,10 +1,11 @@
-﻿#include <iostream>
+﻿#define SDL_MAIN_HANDLED
+#include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 #include "graphing.hpp"
 
 
-int SDL_main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
     SDL_Event event;
 
     SDL_Init(SDL_INIT_VIDEO);
