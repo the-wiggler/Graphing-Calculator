@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
     TTF_Init();
 
     SDL_Window* window = SDL_CreateWindow("Graphing Calculator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_SIZE_X, WINDOW_SIZE_Y, 0);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     TTF_Font* asana = TTF_OpenFont("asana.ttf", 24);
@@ -37,15 +37,11 @@ int main(int argc, char* argv[]) {
         graph.axesRender();
         // renders the funcion points
         graph.functionRender();
-        SDL_RenderPresent(renderer);
 
         // renders the command window
         uiMain.textInput();
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
-
+        SDL_Delay(128); // hardcoded FPS limit (yikes!)
     }
 
     TTF_CloseFont(asana);

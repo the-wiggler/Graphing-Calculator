@@ -118,12 +118,11 @@ void uiMain::textInput() {
             SDL_FreeSurface(textSurface);
             SDL_DestroyTexture(textTexture);
         }
-        SDL_RenderPresent(renderer);
-        // delay to save resources
-        SDL_Delay(16);
-    }
 
-    SDL_RenderClear(renderer);
+        // renders the function every time a new text input is checked for
+        SDL_RenderPresent(renderer);
+        break;
+    }
     SDL_StopTextInput();
     TTF_CloseFont(asana);
 }
