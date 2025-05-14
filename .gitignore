@@ -34,3 +34,6 @@
 out/
 *.vsidx
 .vs/
+
+/build
+/build/*

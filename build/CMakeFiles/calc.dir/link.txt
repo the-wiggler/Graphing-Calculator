@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/calc.dir/link.d CMakeFiles/calc.dir/src/main.cpp.o CMakeFiles/calc.dir/src/numOutputs.cpp.o CMakeFiles/calc.dir/src/graphWindow.cpp.o CMakeFiles/calc.dir/src/ui.cpp.o -o bin/calc  /usr/lib64/libSDL2main.a /usr/lib64/libSDL2_ttf-2.0.so.0.2200.0 /usr/lib64/libSDL2-2.0.so.0.3200.56
