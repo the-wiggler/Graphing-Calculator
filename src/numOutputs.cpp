@@ -17,9 +17,10 @@ std::queue <std::variant<double, std::string>> expression;
 // THIS FUNCTION CHANGES THE ff (user input) string into usable mathematical expression for executeFunctionCalculation
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void uiParse::fInputParse() {
-
     std::istringstream fI(ff);
     std::string token;
+
+    token.clear();
 
     for (size_t i = 0; i < ff.length(); ++i) {
         char c = ff[i];
@@ -28,17 +29,20 @@ void uiParse::fInputParse() {
         if (std::isspace(c)) continue;
 
         // if it's a digit or decimal, parse a full number
-        if (std::isdigit(c) || c == '.') {
-            token.clear();
-            while (i < ff.length() && (std::isdigit(ff[i]) || ff[i] == '.')) {
+        if (std::isdigit(c) || c == '.' || (c == '-')) {  
+            while (i < ff.length() && (std::isdigit(ff[i]) || ff[i] == '.') || ff[i] == '-') {
                 token += ff[i++];
             }
             --i; // step back one char
             expression.emplace(std::stod(token));
         }
 
-        // if it is a variable
+        // if it is a variable (currently only works for variable x)
         else if (std::isalpha(c)) {
+            while (i < ff.length() && std::isalpha(ff[i])) {
+                token += ff[i++];
+            }
+            --i;
             token = c;
             expression.emplace(token);
         }
