@@ -35,8 +35,6 @@ void uiMain::commands()
 
     // one-word commands
     if (cmd == "q" || cmd == "quit" || cmd == "exit") { running = false; return; }
-    if (cmd == "help") { std::cout << "Here's a list of all commands:\n" << "q ~ quit\nhelp ~ get list of commands\nxmin ~ set domain minimum\nxmax ~ set domain maximum\nymin ~ set domain minimum\nymax ~ set domain maximum\n"; return; }
-
     // function selection
     if (cmd == "=" || cmd == "y=" || cmd == "y") {
         // assumes every character after cmd as the input function
@@ -44,7 +42,7 @@ void uiMain::commands()
         
         str >> std::ws;
         std::getline(str, new_func);
-
+        
         if (new_func.length() > 0) {
             // now we send the value of new_func to the main function string in the header file
             // This way it can be referenced by other parts of the program
@@ -105,12 +103,12 @@ void uiMain::textInput() {
         }
 
         // the box that renders over the previous text when updated
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
         SDL_RenderFillRect(renderer, &textRect);
 
         // only updates the screen if there is something in the string
         if (!inputText.empty()) {
-            SDL_Color textColor = { 0, 0, 0, 255 };
+            SDL_Color textColor = { 210, 210, 210, 255 };
             SDL_Surface* textSurface = TTF_RenderText_Solid(font, inputText.c_str(), textColor);
             SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
             SDL_Rect renderQuad = { textRect.x, textRect.y, textSurface->w, textSurface->h };

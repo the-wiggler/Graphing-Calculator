@@ -11,8 +11,8 @@
 #include <SDL2/SDL.h>
 
 
-constexpr int WINDOW_SIZE_X = 1500;
-constexpr int WINDOW_SIZE_Y = 1500;
+constexpr int WINDOW_SIZE_X = 1000;
+constexpr int WINDOW_SIZE_Y = 1000;
 
 static SDL_Color black = { 0, 0, 0, 255 };
 
