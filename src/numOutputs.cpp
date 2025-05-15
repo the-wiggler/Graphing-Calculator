@@ -27,7 +27,7 @@ void numOutputs::fInputParse() {
     std::istringstream fI(ff);
     std::string token;
 
-    bool expectOperand = true;
+    bool expectOperand = true; // true when expecting a number next in the string
 
     token.clear();
 
@@ -63,14 +63,18 @@ void numOutputs::fInputParse() {
         // if it is an operator or parenthesis
         else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '^') {
             token = c;
+            // this first if statement functions to ignore a "-" if its already being used on a negative number
             if (c == '-' && expectOperand == true) {
                 expression.emplace(0.0);
                 operators.push(token);
             }
+            // handles left parenthesis by adding it to the operators stack
             else if (token == "(") {
                 operators.push(token);
                 expectOperand = true;
             }
+            // to handle order of operations relating to parinthesis, when it sees a ")" it begins adding the 
+            // operators 'inside' of the parinthesis to the expression stack
             else if (token == ")") {
                 while (!operators.empty() && operators.top() != "(") {
                     expression.emplace(operators.top());
@@ -79,6 +83,7 @@ void numOutputs::fInputParse() {
                 if (!operators.empty() && operators.top() == "(") operators.pop();
                 expectOperand = false;
             }
+            // otherwise handles order of operations when parinthesis are not directly involved
             else {
                 while (!operators.empty() && operators.top() != "(") {
                     int op1 = determinePrecedence(token);
@@ -132,16 +137,17 @@ void numOutputs::executeParseCalc() {
             }
 
             // if the character is an operator, perform operation
-            else if (c == "+" || c == "-" || c == "*" || c == "/") {
+            else if (c == "+" || c == "-" || c == "*" || c == "/" || c == "^") {
                 double right = eval.top(); eval.pop();
                 double left = eval.top(); eval.pop();
                 double result;
 
                 switch (c[0]) {
-                case '+': result = left + right; break;
-                case '-': result = left - right; break;
-                case '*': result = left * right; break;
-                case '/': result = left / right; break;
+                    case '+': result = left + right; break;
+                    case '-': result = left - right; break;
+                    case '*': result = left * right; break;
+                    case '/': result = left / right; break;
+                    case '^': result = pow(left, right); break;
                 }
 
                 eval.push(result);
