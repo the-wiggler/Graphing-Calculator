@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <queue>
+#include <variant>
 #include <sstream>
 #include <SDL2/SDL.h>
 
@@ -49,14 +51,13 @@ public:
     bool func_valid = false;
     double xi; // NOTE: YOU'RE REQUIRED TO DEFINE A VALUE FOR xi BEFORE THE FUNCTION EXECUTES
 
+    std::stack<std::string> operators;
+    std::queue<std::variant<double, std::string>> expression;
+
+    void fInputParse();
+    int determinePrecedence(const std::string& op);
     void executeFunctionCalculation();
     void executeParseCalc();
-};
-
-// THIS IS RESPONSIBLE FOR PARSING INPUT DATA FROM THE UI INTO MACHINE READABLE INFORMATION
-class uiParse {
-public:
-    void fInputParse();
 };
 
 // THIS IS RESPONSIBLE FOR GRAPHING THE ARRAY OF FUNCTION DATA ONTO THE WINDOW (USED BY graph.cpp)

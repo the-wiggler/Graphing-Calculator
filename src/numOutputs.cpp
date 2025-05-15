@@ -10,15 +10,24 @@
 #include <variant>
 #include <SDL2/SDL.h>
 
-std::stack<std::string> operators;
-std::queue <std::variant<double, std::string>> expression;
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // THIS FUNCTION CHANGES THE ff (user input) string into usable mathematical expression for executeFunctionCalculation
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void uiParse::fInputParse() {
+int numOutputs::determinePrecedence(const std::string& op) {
+    if (op == "+" || op == "-") return 1;
+    if (op == "*" || op == "/") return 2;
+    if (op == "^") return 3;
+    return 0;
+}
+
+void numOutputs::fInputParse() {
+
+    while (!operators.empty()) operators.pop();
+
     std::istringstream fI(ff);
     std::string token;
+
+    bool expectOperand = true;
 
     token.clear();
 
@@ -29,12 +38,15 @@ void uiParse::fInputParse() {
         if (std::isspace(c)) continue;
 
         // if it's a digit or decimal, parse a full number
-        if (std::isdigit(c) || c == '.' || (c == '-')) {  
-            while (i < ff.length() && (std::isdigit(ff[i]) || ff[i] == '.') || ff[i] == '-') {
+        if (std::isdigit(c) || c == '.') {
+            token.clear();
+            while (i < ff.length() && (std::isdigit(ff[i]) || ff[i] == '.')) {
                 token += ff[i++];
             }
             --i; // step back one char
             expression.emplace(std::stod(token));
+            expectOperand = false;
+            
         }
 
         // if it is a variable (currently only works for variable x)
@@ -45,33 +57,43 @@ void uiParse::fInputParse() {
             --i;
             token = c;
             expression.emplace(token);
+            expectOperand = false;
         }
 
         // if it is an operator or parenthesis
-        else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')') {
+        else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '^') {
             token = c;
-
-            if (token == "(") {
+            if (c == '-' && expectOperand == true) {
+                expression.emplace(0.0);
                 operators.push(token);
+            }
+            else if (token == "(") {
+                operators.push(token);
+                expectOperand = true;
             }
             else if (token == ")") {
                 while (!operators.empty() && operators.top() != "(") {
                     expression.emplace(operators.top());
                     operators.pop();
                 }
-                if (!operators.empty() && operators.top() == "(")
-                    operators.pop();
+                if (!operators.empty() && operators.top() == "(") operators.pop();
+                expectOperand = false;
             }
             else {
                 while (!operators.empty() && operators.top() != "(") {
-                    int prec1 = (token == "+" || token == "-") ? 1 : 2;
-                    int prec2 = (operators.top() == "+" || operators.top() == "-") ? 1 : 2;
-                    if (prec2 >= prec1) {
+                    int op1 = determinePrecedence(token);
+                    int op2 = determinePrecedence(operators.top());
+
+                    if (op2 >= op1) {
                         expression.emplace(operators.top());
                         operators.pop();
-                    } else break;
+                    }
+                    else {
+                        break;
+                    }
                 }
                 operators.push(token);
+                expectOperand = true;
             }
         }
     }
@@ -136,12 +158,10 @@ void numOutputs::executeFunctionCalculation() {
     fpoints.clear();
     func_valid = false;
 
-    uiParse par;
-
     x = DOMAIN_MIN;
     for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
         xi = x;
-        par.fInputParse(); // its pretty inefficient to reparse this every time this should be fixed
+        fInputParse(); // its pretty inefficient to reparse this every time this should be fixed
         executeParseCalc(); 
         y = f_val;
 
