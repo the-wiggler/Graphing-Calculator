@@ -20,7 +20,7 @@ static SDL_Color black = { 0, 0, 0, 255 };
 
 inline std::string ff = "x";
 
-inline int FUNC_RES = 10000;
+inline int FUNC_RES = 5000;
 inline float DOMAIN_MIN = -10;
 inline float DOMAIN_MAX = 10;
 inline float RANGE_MIN = -10;

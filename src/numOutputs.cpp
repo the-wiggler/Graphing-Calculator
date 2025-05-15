@@ -22,8 +22,6 @@ int numOutputs::determinePrecedence(const std::string& op) {
 
 void numOutputs::fInputParse() {
 
-    while (!operators.empty()) operators.pop();
-
     std::istringstream fI(ff);
     std::string token;
 
@@ -114,12 +112,13 @@ void numOutputs::fInputParse() {
 // THIS EVALUATES THE FINAL FUNCTION VALUES OF THE ALGEBRAIC QUEUE CREATED BY FINPUTPARSE (expression)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void numOutputs::executeParseCalc() {
-        // evaluates the newly created mathematical structure by inputting a value of xi
+    // evaluates the newly created mathematical structure by inputting a value of xi
+    std::queue<std::variant<double, std::string>> exprCopy = expression;
     std::stack<double> eval;
     
-    while (!expression.empty()) {
-        auto tok = expression.front();
-        expression.pop();
+    while (!exprCopy.empty()) {
+        auto tok = exprCopy.front();
+        exprCopy.pop();
 
         if (std::holds_alternative<double>(tok)) {
             // its a number
@@ -164,10 +163,11 @@ void numOutputs::executeFunctionCalculation() {
     fpoints.clear();
     func_valid = false;
 
+    fInputParse();
+
     x = DOMAIN_MIN;
     for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
         xi = x;
-        fInputParse(); // its pretty inefficient to reparse this every time this should be fixed
         executeParseCalc(); 
         y = f_val;
 
