@@ -17,7 +17,12 @@ int numOutputs::determinePrecedence(const std::string& op) {
     if (op == "+" || op == "-") return 1;
     if (op == "*" || op == "/") return 2;
     if (op == "^") return 3;
+    if (op == "sin" || op == "cos" || op == "tan") return 4;
     return 0;
+}
+
+static bool isComplexFunction(const std::string& funcToken) {
+    return funcToken == "sin" || funcToken == "cos" || funcToken == "tan";
 }
 
 void numOutputs::fInputParse() {
@@ -32,10 +37,10 @@ void numOutputs::fInputParse() {
     for (size_t i = 0; i < ff.length(); ++i) {
         char c = ff[i];
 
-        // skip spaces if user input them for some reason
+        /* ignores whitespace -----------------------------------------------------------------*/
         if (std::isspace(c)) continue;
 
-        // if it's a digit or decimal, parse a full number
+        /* if it is an operand associated character -------------------------------------------*/
         if (std::isdigit(c) || c == '.') {
             token.clear();
             while (i < ff.length() && (std::isdigit(ff[i]) || ff[i] == '.')) {
@@ -47,8 +52,9 @@ void numOutputs::fInputParse() {
             
         }
 
-        // if it is a variable (currently only works for variable x)
-        else if (std::isalpha(c)) {
+        /* if it is a variable (x) ------------------------------------------------------------*/
+        else if (c == 'x') {
+            token.clear();
             while (i < ff.length() && std::isalpha(ff[i])) {
                 token += ff[i++];
             }
@@ -58,8 +64,26 @@ void numOutputs::fInputParse() {
             expectOperand = false;
         }
 
-        // if it is an operator or parenthesis
+        /* if it is a multi-letter function: sin, cos, etc ---------  -------------------------*/
+        else if (std::isalpha(c)) {
+            token.clear();
+            while (i < ff.length() && std::isalpha(ff[i])) {
+                token += ff[i++];
+            }
+            -- i;
+            if (isComplexFunction(token)) {
+                operators.push(token);
+                expectOperand = true;
+            }
+            else {
+                std::cerr << "ERROR: UNKNOWN TOKEN INPUT\n";
+                return;
+            }
+        }
+
+        /* if it is an operator or parenthesis ------------------------------------------------*/
         else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '^') {
+            token.clear();
             token = c;
             // this first if statement functions to ignore a "-" if its already being used on a negative number
             if (c == '-' && expectOperand == true) {
@@ -74,11 +98,19 @@ void numOutputs::fInputParse() {
             // to handle order of operations relating to parinthesis, when it sees a ")" it begins adding the 
             // operators 'inside' of the parinthesis to the expression stack
             else if (token == ")") {
+                // organizes considering order of operations regarding parintheses into RPN
                 while (!operators.empty() && operators.top() != "(") {
                     expression.emplace(operators.top());
                     operators.pop();
                 }
+                // pop the left '(' when it no longer matters
                 if (!operators.empty() && operators.top() == "(") operators.pop();
+                // checks if there is a function before the "(", if so, adds to expression queue
+                if (!operators.empty() && isComplexFunction(operators.top())) {
+                    expression.emplace(operators.top());
+                    operators.pop();
+                }
+
                 expectOperand = false;
             }
             // otherwise handles order of operations when parinthesis are not directly involved
@@ -128,6 +160,7 @@ void numOutputs::executeParseCalc() {
         }
         else if (std::holds_alternative<std::string>(tok)) {
             std::string c = std::get<std::string>(tok);
+            double result = 0.0;
 
             // if the character is x, replace x with xi to simulate it being number
             if (c == "x") {
@@ -139,15 +172,23 @@ void numOutputs::executeParseCalc() {
             else if (c == "+" || c == "-" || c == "*" || c == "/" || c == "^") {
                 double right = eval.top(); eval.pop();
                 double left = eval.top(); eval.pop();
-                double result;
 
-                switch (c[0]) {
-                    case '+': result = left + right; break;
-                    case '-': result = left - right; break;
-                    case '*': result = left * right; break;
-                    case '/': result = left / right; break;
-                    case '^': result = pow(left, right); break;
-                }
+                if (c == "+") result = left + right;
+                else if (c == "-") result = left - right;
+                else if (c == "*") result = left * right;
+                else if (c == "/") result = left / right;
+                else if (c == "^") result = std::pow(left, right);
+
+                eval.push(result);
+            }
+
+            // if the character is a *special~* function
+            else if (c == "sin" || c == "cos" || c == "tan") {
+                double v = eval.top(); eval.pop();
+
+                if (c == "sin") result = std::sin(v);
+                else if (c == "cos") result = std::cos(v);
+                else if (c == "tan") result = std::tan(v);
 
                 eval.push(result);
             }
