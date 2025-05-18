@@ -13,8 +13,13 @@
 #include <SDL2/SDL.h>
 
 
-constexpr int WINDOW_SIZE_X = 1000;
-constexpr int WINDOW_SIZE_Y = 1000;
+#ifdef _WIN32
+    constexpr int WINDOW_SIZE_X = 800;
+    constexpr int WINDOW_SIZE_Y = 800;
+#else
+    constexpr int WINDOW_SIZE_X = 1000;
+    constexpr int WINDOW_SIZE_Y = 1000;
+#endif
 
 static SDL_Color black = { 0, 0, 0, 255 };
 

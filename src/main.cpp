@@ -1,4 +1,6 @@
-﻿#define SDL_MAIN_HANDLED
+﻿#if defined(__linux__) || defined(__APPLE__)
+#define SDL_MAIN_HANDLED
+#endif
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
