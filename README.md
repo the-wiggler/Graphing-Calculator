@@ -10,6 +10,8 @@ Currently supported operators:
 * basic arithmetic (+-*/)
 * powers (^)
 * basic trig functions (sin,cos,tan)
+* square root
+* log and ln
 
 Dependencies to compile:
 * SDL2
