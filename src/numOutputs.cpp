@@ -17,12 +17,13 @@ int numOutputs::determinePrecedence(const std::string& op) {
     if (op == "+" || op == "-") return 1;
     if (op == "*" || op == "/") return 2;
     if (op == "^") return 3;
-    if (op == "sin" || op == "cos" || op == "tan") return 4;
+    if (op == "sin" || op == "cos" || op == "tan" || op == "log" || op == "ln" || op == "sqrt") return 4;
     return 0;
 }
 
 static bool isComplexFunction(const std::string& funcToken) {
-    return funcToken == "sin" || funcToken == "cos" || funcToken == "tan";
+    return funcToken == "sin" || funcToken == "cos" || funcToken == "tan" ||
+           funcToken == "log" || funcToken == "ln"  || funcToken == "sqrt";
 }
 
 void numOutputs::fInputParse() {
@@ -183,12 +184,15 @@ void numOutputs::executeParseCalc() {
             }
 
             // if the character is a *special~* function
-            else if (c == "sin" || c == "cos" || c == "tan") {
+            else if (c == "sin" || c == "cos" || c == "tan" || c == "log" || c == "ln" || c == "sqrt") {
                 double v = eval.top(); eval.pop();
 
-                if (c == "sin") result = std::sin(v);
-                else if (c == "cos") result = std::cos(v);
-                else if (c == "tan") result = std::tan(v);
+                if      (c == "sin") result =   std::sin(v);
+                else if (c == "cos") result =   std::cos(v);
+                else if (c == "tan") result =   std::tan(v);
+                else if (c == "log") result =   std::log10(v);
+                else if (c == "ln") result =    std::log(v);
+                else if (c == "sqrt") result =  std::sqrt(v);
 
                 eval.push(result);
             }

@@ -103,7 +103,7 @@ void uiMain::textInput() {
         }
 
         // the box that renders over the previous text when updated
-        SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+        SDL_SetRenderDrawColor(renderer, 49,54,58, 255);
         SDL_RenderFillRect(renderer, &textRect);
 
         // only updates the screen if there is something in the string

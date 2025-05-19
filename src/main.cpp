@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
     while (uiMain.running) {
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 19,22,25,255);
         SDL_RenderClear(renderer);
 
         // creates an instance of graphMain -- the rendering solution to display the graph

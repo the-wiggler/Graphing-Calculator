@@ -34,7 +34,7 @@ void graphMain::axesRender() {
     
     //////////////////////////////////////////////////////////////////////////////////
     // graph reference lines
-    SDL_SetRenderDrawColor(renderer, 33, 33, 33, 255);
+    SDL_SetRenderDrawColor(renderer, 31,40,47,255);
     for (int i = 0; i <= DOMAIN_INTERVAL; i++) {
         float a = (1 / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
         SDL_RenderDrawLine(renderer, 0 + i * a, 0, 0 + i * a, WINDOW_SIZE_X);
@@ -48,7 +48,7 @@ void graphMain::axesRender() {
 
     //////////////////////////////////////////////////////////////////////////////////
     // domain tick marks
-    SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+    SDL_SetRenderDrawColor(renderer, 100,110,120,255);
     for (int i = 0; i <= DOMAIN_INTERVAL; i++) {
         float a = (1 / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
         SDL_RenderDrawLine(renderer, 0 + i * a, x_origin - 5, 0 + i * a, x_origin + 5);
