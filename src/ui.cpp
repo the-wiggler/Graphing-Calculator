@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <sstream>
 #include <string>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <SDL_ttf.h>
 #include "graphing.hpp"
 

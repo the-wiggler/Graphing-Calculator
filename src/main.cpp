@@ -2,7 +2,7 @@
 #define SDL_MAIN_HANDLED
 #endif
 #include <iostream>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <SDL_ttf.h>
 #include "graphing.hpp"
 

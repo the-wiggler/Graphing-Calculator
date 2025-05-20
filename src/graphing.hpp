@@ -10,7 +10,7 @@
 #include <queue>
 #include <variant>
 #include <sstream>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 
 #ifdef _WIN32
