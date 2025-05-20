@@ -66,7 +66,6 @@ void uiMain::commands()
 // collects text input
 ////////////////////////////////////////////////////////////////////////////////////////////
 void uiMain::textInput() {
-    TTF_Font* font = TTF_OpenFont("font.ttf", WINDOW_SIZE_Y/24);
 
     SDL_StartTextInput(window);
     bool quit = false;
@@ -117,7 +116,7 @@ void uiMain::textInput() {
         // only updates the screen if there is something in the string
         if (!inputText.empty()) {
             SDL_Color textColor = { 210, 210, 210, 255 };
-            SDL_Surface* textSurface = TTF_RenderText_Solid(font, inputText.c_str(), inputText.length(), textColor);
+            SDL_Surface* textSurface = TTF_RenderText_Blended(font, inputText.c_str(), inputText.length(), textColor);
             SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
             SDL_FRect renderQuad = { textRect.x, textRect.y, static_cast<float>(textSurface->w), static_cast<float>(textSurface->h) };
             SDL_RenderTexture(renderer, textTexture, nullptr, &renderQuad);
@@ -130,5 +129,4 @@ void uiMain::textInput() {
         break;
     }
     SDL_StopTextInput(window);
-    TTF_CloseFont(font);
 }

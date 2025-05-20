@@ -3,6 +3,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include "graphing.hpp"
 
+TTF_Font* font = nullptr;
 
 int main() {
 
@@ -13,7 +14,10 @@ int main() {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    TTF_Font* font = TTF_OpenFont("font.ttf", 24);
+    // handles font loading
+    std::string fontPath = SDL_GetBasePath();
+    fontPath += "font.ttf";
+    font = TTF_OpenFont(fontPath.c_str(), WINDOW_SIZE_Y/24);
     if (!font) {
         SDL_ShowSimpleMessageBox(0x00000010, "Graphing Calculator", "ERROR: FONT FILE <font.ttf> NOT FOUND", NULL);
     }
