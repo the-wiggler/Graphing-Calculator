@@ -105,7 +105,7 @@ void graphMain::functionRender() {
         SDL_fpoints.reserve(outputs.fpoints.size());
 
         SDL_SetRenderDrawColor(renderer, 50, 50, 255, 255);
-        for (int i = 0; i < outputs.fpoints.size(); i++) {
+        for (size_t i = 0; i < outputs.fpoints.size(); i++) {
             // Transform x from domain space to screen space
             int px = ((outputs.fpoints[i].x - DOMAIN_MIN) / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
 

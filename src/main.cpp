@@ -4,8 +4,7 @@
 #include "graphing.hpp"
 
 
-int main(int argc, char* argv[]) {
-    SDL_Event event;
+int main() {
 
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();

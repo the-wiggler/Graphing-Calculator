@@ -21,8 +21,6 @@
     constexpr float WINDOW_SIZE_Y = 1000;
 #endif
 
-static SDL_Color black = { 0, 0, 0, 255 };
-
 inline std::string ff = "x";
 
 inline int FUNC_RES = 5000;
