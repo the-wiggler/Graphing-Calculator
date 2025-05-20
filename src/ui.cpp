@@ -30,6 +30,9 @@ void uiMain::commands()
         else if (cmd == "ymin" && !(value >= RANGE_MAX))    RANGE_MIN = value;
         else if (cmd == "ymax" && !(value <= RANGE_MIN))    RANGE_MAX = value;
         std::cout << cmd << " set to:" << value << "\n";
+
+        axesBad = true;
+        funcBad = true;
         return; 
     }
 
@@ -53,6 +56,8 @@ void uiMain::commands()
         else {
             std::cerr << "ERROR: Invalid Function Input\n";
         }
+
+        funcBad = true;
     }
 
 }
@@ -97,6 +102,9 @@ void uiMain::textInput() {
 
                     inputText.clear();
                     recalculateRange();
+                    axesBad = true;
+                    funcBad = true;
+
                     quit = true;
                 }
             }

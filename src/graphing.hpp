@@ -34,6 +34,10 @@ inline float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
 inline float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
 inline double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 
+inline bool funcBad = true; // recompute f(x) if it its previous state is no longer valid 
+                            //(function command changed the function string value)
+inline bool axesBad = true;
+
 inline void recalculateRange() {
     DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
     RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;

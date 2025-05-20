@@ -5,6 +5,10 @@
 #include <cmath>
 #include <vector>
 
+static SDL_Texture* cachedAxes = nullptr;
+static SDL_Texture* cachedFunc = nullptr;
+static numOutputs outputs;
+
 // create a target texture the size of the window
 static SDL_Texture* makeTargetTexture(SDL_Renderer* r)
 {
@@ -18,8 +22,14 @@ static SDL_Texture* makeTargetTexture(SDL_Renderer* r)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void graphMain::axesRender() {
     // draw onto the texture
-    SDL_Texture* axesTexture = makeTargetTexture(renderer);
-    SDL_SetRenderTarget(renderer, axesTexture);
+    if (!axesBad && cachedAxes) {
+        SDL_RenderCopy(renderer, cachedAxes, nullptr, nullptr);
+        return;
+    }
+
+    if (cachedAxes) SDL_DestroyTexture(cachedAxes);
+    cachedAxes = makeTargetTexture(renderer);
+    SDL_SetRenderTarget(renderer, cachedAxes);
 
     // clears the renderer with a transparent color so nothing is obstructed by accident
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -67,22 +77,22 @@ void graphMain::axesRender() {
 
     // sets back to default and renders
     SDL_SetRenderTarget(renderer, nullptr);
-    SDL_RenderCopy(renderer, axesTexture, nullptr, nullptr);
-    SDL_DestroyTexture(axesTexture);
+    SDL_RenderCopy(renderer, cachedAxes, nullptr, nullptr);
+    axesBad = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // the function responsible for graphing the points onto the window
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void graphMain::functionRender() {
-    numOutputs outputs;
-    // draw onto the texture
-    SDL_Texture* funcTexture = makeTargetTexture(renderer);
-    SDL_SetRenderTarget(renderer, funcTexture);
+    if (!funcBad && cachedFunc) {
+        SDL_RenderCopy(renderer, cachedFunc, nullptr, nullptr);
+        return;
+    }
 
-    // clears the renderer with a transparent color so nothing is obstructed by accident
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    SDL_RenderClear(renderer);
+    if (cachedFunc) SDL_DestroyTexture(cachedFunc);
+    cachedFunc = makeTargetTexture(renderer);
+    SDL_SetRenderTarget(renderer, cachedFunc);
 
     // calculates values of the function
     outputs.executeFunctionCalculation();
@@ -114,6 +124,6 @@ void graphMain::functionRender() {
     }
 
     SDL_SetRenderTarget(renderer, nullptr);
-    SDL_RenderCopy(renderer, funcTexture, nullptr, nullptr);
-    SDL_DestroyTexture(funcTexture);
+    SDL_RenderCopy(renderer, cachedFunc, nullptr, nullptr);
+    funcBad = false;
 }
