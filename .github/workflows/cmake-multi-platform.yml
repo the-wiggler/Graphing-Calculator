@@ -39,15 +39,23 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # Install SDL2 dependencies on Linux
     - name: Install SDL2 dependencies (Linux only)
       if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install -y libsdl2-dev libsdl2-ttf-dev
 
-    - name: Install SDL2 dependencies (Windows only)
+    # Install SDL2 dependencies on Windows
+    - name: Setup SDL2 (Windows only)
       if: runner.os == 'Windows'
       run: |
-        choco install sdl2
-        choco install sdl2-ttf
+        # Download and extract precompiled SDL2 and SDL2_ttf binaries
+        curl -LO https://www.libsdl.org/release/SDL2-devel-2.28.2-VC.zip
+        curl -LO https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.20.1-VC.zip
+        7z x SDL2-devel-2.28.2-VC.zip -oSDL2
+        7z x SDL2_ttf-devel-2.20.1-VC.zip -oSDL2_ttf
+        # Set environment variables for SDL2 and SDL2_ttf
+        echo "SDL2_DIR=${{ github.workspace }}/SDL2" >> $GITHUB_ENV
+        echo "SDL2_TTF_DIR=${{ github.workspace }}/SDL2_ttf" >> $GITHUB_ENV
 
     - name: Set reusable strings
       id: strings
@@ -61,6 +69,8 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DSDL2_DIR=${{ env.SDL2_DIR }} 
+        -DSDL2_TTF_DIR=${{ env.SDL2_TTF_DIR }}
         -S ${{ github.workspace }}
 
     - name: Build
