@@ -10,15 +10,15 @@
 #include <queue>
 #include <variant>
 #include <sstream>
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 
 #ifdef _WIN32
-    constexpr int WINDOW_SIZE_X = 800;
-    constexpr int WINDOW_SIZE_Y = 800;
+    constexpr float WINDOW_SIZE_X = 800;
+    constexpr float WINDOW_SIZE_Y = 800;
 #else
-    constexpr int WINDOW_SIZE_X = 1000;
-    constexpr int WINDOW_SIZE_Y = 1000;
+    constexpr float WINDOW_SIZE_X = 1000;
+    constexpr float WINDOW_SIZE_Y = 1000;
 #endif
 
 static SDL_Color black = { 0, 0, 0, 255 };
@@ -84,7 +84,8 @@ private:
 // THIS IS RESPONSIBLE FOR MANAGING THE UI
 class uiMain {
 public:
-    uiMain(SDL_Renderer* r) : renderer(r) {}
+    uiMain(SDL_Window* w, SDL_Renderer* r) : window(w), renderer(r) {}
+
 
     bool running = true;
 
@@ -93,6 +94,7 @@ public:
     void commands();
 
 private:
+    SDL_Window* window;
     SDL_Renderer* renderer;
 };
 

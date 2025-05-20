@@ -1,6 +1,6 @@
 // this file is responsible for the actual function and its axes rendering on the screen
 #include <iostream>
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include "graphing.hpp"
 #include <cmath>
 #include <vector>
@@ -23,7 +23,7 @@ static SDL_Texture* makeTargetTexture(SDL_Renderer* r)
 void graphMain::axesRender() {
     // draw onto the texture
     if (!axesBad && cachedAxes) {
-        SDL_RenderCopy(renderer, cachedAxes, nullptr, nullptr);
+        SDL_RenderTexture(renderer, cachedAxes, nullptr, nullptr);
         return;
     }
 
@@ -47,11 +47,11 @@ void graphMain::axesRender() {
     SDL_SetRenderDrawColor(renderer, 31,40,47,255);
     for (int i = 0; i <= DOMAIN_INTERVAL; i++) {
         float a = (1 / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
-        SDL_RenderDrawLine(renderer, 0 + i * a, 0, 0 + i * a, WINDOW_SIZE_X);
+        SDL_RenderLine(renderer, 0 + i * a, 0, 0 + i * a, WINDOW_SIZE_X);
     }
     for (int i = 0; i <= RANGE_INTERVAL; i++) {
         float a = (1 / RANGE_INTERVAL) * WINDOW_SIZE_Y;
-        SDL_RenderDrawLine(renderer, 0, 0 + i * a, WINDOW_SIZE_Y, 0 + i * a);
+        SDL_RenderLine(renderer, 0, 0 + i * a, WINDOW_SIZE_Y, 0 + i * a);
     }
     //
     //////////////////////////////////////////////////////////////////////////////////
@@ -61,23 +61,23 @@ void graphMain::axesRender() {
     SDL_SetRenderDrawColor(renderer, 100,110,120,255);
     for (int i = 0; i <= DOMAIN_INTERVAL; i++) {
         float a = (1 / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
-        SDL_RenderDrawLine(renderer, 0 + i * a, x_origin - 5, 0 + i * a, x_origin + 5);
+        SDL_RenderLine(renderer, 0 + i * a, x_origin - 5, 0 + i * a, x_origin + 5);
     }
     // range tick marks
     for (int i = 0; i <= RANGE_INTERVAL; i++) {
         float a = (1 / RANGE_INTERVAL) * WINDOW_SIZE_Y;
-        SDL_RenderDrawLine(renderer, y_origin - 5, 0 + i * a, y_origin + 5, 0 + i * a);
+        SDL_RenderLine(renderer, y_origin - 5, 0 + i * a, y_origin + 5, 0 + i * a);
     }
     //
     //////////////////////////////////////////////////////////////////////////////////
 
     // this draws the axis lines if they're applicable within the given domain/range
-    SDL_RenderDrawLine(renderer, 0, x_origin, WINDOW_SIZE_X, x_origin);
-    SDL_RenderDrawLine(renderer, y_origin, 0, y_origin, WINDOW_SIZE_Y);
+    SDL_RenderLine(renderer, 0, x_origin, WINDOW_SIZE_X, x_origin);
+    SDL_RenderLine(renderer, y_origin, 0, y_origin, WINDOW_SIZE_Y);
 
     // sets back to default and renders
     SDL_SetRenderTarget(renderer, nullptr);
-    SDL_RenderCopy(renderer, cachedAxes, nullptr, nullptr);
+    SDL_RenderTexture(renderer, cachedAxes, nullptr, nullptr);
     axesBad = false;
 }
 
@@ -86,7 +86,7 @@ void graphMain::axesRender() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void graphMain::functionRender() {
     if (!funcBad && cachedFunc) {
-        SDL_RenderCopy(renderer, cachedFunc, nullptr, nullptr);
+        SDL_RenderTexture(renderer, cachedFunc, nullptr, nullptr);
         return;
     }
 
@@ -101,7 +101,7 @@ void graphMain::functionRender() {
     if (outputs.func_valid) {
 
         // scales and plots the points onto the screen
-        std::vector<SDL_Point> SDL_fpoints;
+        std::vector<SDL_FPoint> SDL_fpoints;
         SDL_fpoints.reserve(outputs.fpoints.size());
 
         SDL_SetRenderDrawColor(renderer, 50, 50, 255, 255);
@@ -112,11 +112,14 @@ void graphMain::functionRender() {
             // Transform y from range space to screen space
             int py = ((RANGE_MAX - outputs.fpoints[i].y) / RANGE_INTERVAL) * WINDOW_SIZE_Y;
 
-            SDL_fpoints.push_back({ px, py });
+            SDL_FPoint point;
+            point.x = px;
+            point.y = py;
+            SDL_fpoints.push_back(point);
         }
 
         // Renders the points on the renderer
-        SDL_RenderDrawPoints(renderer, SDL_fpoints.data(), SDL_fpoints.size());
+        SDL_RenderPoints(renderer, SDL_fpoints.data(), SDL_fpoints.size());
 
     }
     else {
@@ -124,6 +127,6 @@ void graphMain::functionRender() {
     }
 
     SDL_SetRenderTarget(renderer, nullptr);
-    SDL_RenderCopy(renderer, cachedFunc, nullptr, nullptr);
+    SDL_RenderTexture(renderer, cachedFunc, nullptr, nullptr);
     funcBad = false;
 }

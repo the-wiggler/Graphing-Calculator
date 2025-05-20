@@ -1,9 +1,6 @@
-﻿#if defined(__linux__) || defined(__APPLE__)
-#define SDL_MAIN_HANDLED
-#endif
-#include <iostream>
-#include <SDL.h>
-#include <SDL_ttf.h>
+﻿#include <iostream>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "graphing.hpp"
 
 
@@ -13,8 +10,8 @@ int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
-    SDL_Window* window = SDL_CreateWindow("Graphing Calculator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_SIZE_X, WINDOW_SIZE_Y, SDL_WINDOW_RESIZABLE);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Window* window = SDL_CreateWindow("Graphing Calculator", WINDOW_SIZE_X, WINDOW_SIZE_Y, SDL_WINDOW_RESIZABLE);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     TTF_Font* font = TTF_OpenFont("font.ttf", 24);
@@ -26,7 +23,7 @@ int main(int argc, char* argv[]) {
     // LOOP FOR THE WINDOW PROGRAM                                                                           //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    uiMain uiMain(renderer);
+    uiMain uiMain(window, renderer);
 
     while (uiMain.running) {
 
