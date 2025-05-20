@@ -50,6 +50,15 @@ void numOutputs::fInputParse() {
             --i; // step back one char
             expression.emplace(std::stod(token));
             expectOperand = false;
+
+            // Check for multiplication without "*"
+            char next = ff[i+1];
+            if (i + 1 < ff.length() && next == 'x') {
+                operators.push("*");
+            }
+            else if (i + 1 < ff.length() && !(next == '+' || next == '-' || next == '*' || next == '/' || next == '^' || next == ')')) {
+                operators.push("*");
+            }
             
         }
 
