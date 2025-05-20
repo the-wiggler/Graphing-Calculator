@@ -1,6 +1,6 @@
 // this file is responsible for the actual function and its axes rendering on the screen
 #include <iostream>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "graphing.hpp"
 #include <cmath>
 #include <vector>
