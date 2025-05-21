@@ -88,6 +88,7 @@ public:
 
 
     bool running = true;
+    bool mouseHeld; // if the mouse is held down
 
     void commandWindow();
     void textInput();

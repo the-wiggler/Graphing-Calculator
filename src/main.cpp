@@ -10,7 +10,7 @@ int main() {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
-    SDL_Window* window = SDL_CreateWindow("Graphing Calculator", WINDOW_SIZE_X, WINDOW_SIZE_Y, SDL_WINDOW_RESIZABLE);
+    SDL_Window* window = SDL_CreateWindow("Calc", WINDOW_SIZE_X, WINDOW_SIZE_Y, SDL_WINDOW_RESIZABLE);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
@@ -42,6 +42,9 @@ int main() {
 
         // renders the command window
         uiMain.textInput();
+
+        // 32 ms delay
+        SDL_Delay(32);
 
     }
 

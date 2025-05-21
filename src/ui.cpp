@@ -22,7 +22,7 @@ void uiMain::commands()
     if (cmd == "xmin" || cmd == "xmax" || cmd == "ymin" || cmd == "ymax") {
         double value;
         if (!(str >> value)) {
-            std::cout << "ERROR: Expected a numeric argument for '" << cmd << "'\n";
+            std::cerr << "ERROR: Expected a numeric argument for '" << cmd << "'\n";
             return;
         }
         if (cmd == "xmin" && !(value >= DOMAIN_MAX))        DOMAIN_MIN = value;
@@ -63,12 +63,14 @@ void uiMain::commands()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// collects text input
+// collects user input
 ////////////////////////////////////////////////////////////////////////////////////////////
 void uiMain::textInput() {
 
     SDL_StartTextInput(window);
+
     bool quit = false;
+
     SDL_Event e;
 
     // the text area
@@ -76,11 +78,14 @@ void uiMain::textInput() {
     while (!quit) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_EVENT_QUIT) {
-                quit = true;
                 running = false;
+                quit = true;
             }
-            else if (e.type == SDL_EVENT_TEXT_INPUT) inputText += e.text.text;
-            else if (e.type == SDL_EVENT_KEY_DOWN) {
+            // if something is typed, append it to the input text string for later processing
+            if (e.type == SDL_EVENT_TEXT_INPUT) inputText += e.text.text;
+
+            // if a specific key combo is pressed, do a certain command
+            if (e.type == SDL_EVENT_KEY_DOWN) {
                 if (e.key.key == SDLK_BACKSPACE && !inputText.empty()) {
                     inputText.pop_back();
                 }
@@ -103,26 +108,44 @@ void uiMain::textInput() {
                     recalculateRange();
                     axesBad = true;
                     funcBad = true;
-
-                    quit = true;
                 }
             }
+
+            // if the mouse wheel is scrolled, change the domain values and recalculate what the graph 
+            // and axes should look like
             if (e.type == SDL_EVENT_MOUSE_WHEEL) {
                 float scrollY = e.wheel.y;
 
                 DOMAIN_MIN -= scrollY;
                 DOMAIN_MAX += scrollY;
-                RANGE_MIN += scrollY;
-                RANGE_MAX -= scrollY;
+                RANGE_MIN -= scrollY;
+                RANGE_MAX += scrollY;
 
                 std::cout << scrollY << std::endl;
                 
                 recalculateRange();
                 axesBad = true;
                 funcBad = true;
-                
-                quit = true;
             }
+
+            // if the mouse button is pressed
+            if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+                mouseHeld = true;
+            }
+            else if (e.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+                mouseHeld = false;
+            }
+            if (mouseHeld == true) {
+                float cPosX, cPosY; // current position of the mouse
+                SDL_GetMouseState(&cPosX, &cPosY);
+
+                std::cout << "Mouse Coordinate Change: " << (cPosX) << "," << (cPosY) << std::endl;
+
+                recalculateRange();
+                axesBad = true;
+                funcBad = true;
+            }
+
         }
 
         // the box that renders over the previous text when updated

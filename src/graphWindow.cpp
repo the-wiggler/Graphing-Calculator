@@ -122,9 +122,6 @@ void graphMain::functionRender() {
         SDL_RenderPoints(renderer, SDL_fpoints.data(), SDL_fpoints.size());
 
     }
-    else {
-        SDL_ShowSimpleMessageBox(0x00000010, "Graphing Calculator", "WARNING: Function not within bounds of range", NULL);
-    }
 
     SDL_SetRenderTarget(renderer, nullptr);
     SDL_RenderTexture(renderer, cachedFunc, nullptr, nullptr);
