@@ -89,6 +89,7 @@ public:
 
     bool running = true;
     bool mouseHeld; // if the mouse is held down
+    float cPosX, cPosY; // current position of the mouse
 
     void commandWindow();
     void textInput();

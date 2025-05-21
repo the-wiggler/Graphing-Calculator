@@ -136,7 +136,6 @@ void uiMain::textInput() {
                 mouseHeld = false;
             }
             if (mouseHeld == true) {
-                float cPosX, cPosY; // current position of the mouse
                 SDL_GetMouseState(&cPosX, &cPosY);
 
                 std::cout << "Mouse Coordinate Change: " << (cPosX) << "," << (cPosY) << std::endl;
