@@ -1,23 +1,23 @@
-﻿#if defined(__linux__) || defined(__APPLE__)
-#define SDL_MAIN_HANDLED
-#endif
-#include <iostream>
-#include <SDL.h>
-#include <SDL_ttf.h>
+﻿#include <iostream>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "graphing.hpp"
 
+TTF_Font* font = nullptr;
 
-int main(int argc, char* argv[]) {
-    SDL_Event event;
+int main() {
 
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
-    SDL_Window* window = SDL_CreateWindow("Graphing Calculator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_SIZE_X, WINDOW_SIZE_Y, SDL_WINDOW_RESIZABLE);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Window* window = SDL_CreateWindow("Graphing Calculator", WINDOW_SIZE_X, WINDOW_SIZE_Y, SDL_WINDOW_RESIZABLE);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    TTF_Font* font = TTF_OpenFont("font.ttf", 24);
+    // handles font loading
+    std::string fontPath = SDL_GetBasePath();
+    fontPath += "font.ttf";
+    font = TTF_OpenFont(fontPath.c_str(), WINDOW_SIZE_Y/24);
     if (!font) {
         SDL_ShowSimpleMessageBox(0x00000010, "Graphing Calculator", "ERROR: FONT FILE <font.ttf> NOT FOUND", NULL);
     }
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     // LOOP FOR THE WINDOW PROGRAM                                                                           //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    uiMain uiMain(renderer);
+    uiMain uiMain(window, renderer);
 
     while (uiMain.running) {
 

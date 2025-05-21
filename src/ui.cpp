@@ -1,8 +1,8 @@
 ﻿#include <iostream>
 #include <sstream>
 #include <string>
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "graphing.hpp"
 
 std::string inputText = "";
@@ -66,34 +66,33 @@ void uiMain::commands()
 // collects text input
 ////////////////////////////////////////////////////////////////////////////////////////////
 void uiMain::textInput() {
-    TTF_Font* font = TTF_OpenFont("font.ttf", WINDOW_SIZE_Y/24);
 
-    SDL_StartTextInput();
+    SDL_StartTextInput(window);
     bool quit = false;
     SDL_Event e;
 
     // the text area
-    SDL_Rect textRect = { 10, 10, WINDOW_SIZE_X/3, WINDOW_SIZE_Y/20 };
+    SDL_FRect textRect = { 10.0, 10.0, WINDOW_SIZE_X/3, WINDOW_SIZE_Y/20 };
     while (!quit) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
+            if (e.type == SDL_EVENT_QUIT) {
                 quit = true;
                 running = false;
             }
-            else if (e.type == SDL_TEXTINPUT) inputText += e.text.text;
-            else if (e.type == SDL_KEYDOWN) {
-                if (e.key.keysym.sym == SDLK_BACKSPACE && !inputText.empty()) {
+            else if (e.type == SDL_EVENT_TEXT_INPUT) inputText += e.text.text;
+            else if (e.type == SDL_EVENT_KEY_DOWN) {
+                if (e.key.key == SDLK_BACKSPACE && !inputText.empty()) {
                     inputText.pop_back();
                 }
-                else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
+                else if (e.key.key == SDLK_C && SDL_GetModState() & SDLK_LCTRL) {
                     SDL_SetClipboardText(inputText.c_str());
                 }
-                else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
+                else if (e.key.key == SDLK_V && SDL_GetModState() & SDLK_LCTRL) {
                     inputText = SDL_GetClipboardText();
                 }
 
                 // all of the supported commands that can be entered into the command window
-                else if (e.key.keysym.sym == SDLK_RETURN) {
+                else if (e.key.key == SDLK_RETURN) {
                     std::cout << "COMMAND INPUT: " << inputText << std::endl;
                     ////////////////////////////////////////////////////////////////////////
                     // runs the command window that allows for text input
@@ -117,11 +116,11 @@ void uiMain::textInput() {
         // only updates the screen if there is something in the string
         if (!inputText.empty()) {
             SDL_Color textColor = { 210, 210, 210, 255 };
-            SDL_Surface* textSurface = TTF_RenderText_Solid(font, inputText.c_str(), textColor);
+            SDL_Surface* textSurface = TTF_RenderText_Blended(font, inputText.c_str(), inputText.length(), textColor);
             SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-            SDL_Rect renderQuad = { textRect.x, textRect.y, textSurface->w, textSurface->h };
-            SDL_RenderCopy(renderer, textTexture, nullptr, &renderQuad);
-            SDL_FreeSurface(textSurface);
+            SDL_FRect renderQuad = { textRect.x, textRect.y, static_cast<float>(textSurface->w), static_cast<float>(textSurface->h) };
+            SDL_RenderTexture(renderer, textTexture, nullptr, &renderQuad);
+            SDL_DestroySurface(textSurface);
             SDL_DestroyTexture(textTexture);
         }
 
@@ -129,6 +128,5 @@ void uiMain::textInput() {
         SDL_RenderPresent(renderer);
         break;
     }
-    SDL_StopTextInput();
-    TTF_CloseFont(font);
+    SDL_StopTextInput(window);
 }

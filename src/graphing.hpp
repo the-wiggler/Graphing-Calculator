@@ -10,18 +10,17 @@
 #include <queue>
 #include <variant>
 #include <sstream>
-#include <SDL.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 
 #ifdef _WIN32
-    constexpr int WINDOW_SIZE_X = 800;
-    constexpr int WINDOW_SIZE_Y = 800;
+    constexpr float WINDOW_SIZE_X = 800;
+    constexpr float WINDOW_SIZE_Y = 800;
 #else
-    constexpr int WINDOW_SIZE_X = 1000;
-    constexpr int WINDOW_SIZE_Y = 1000;
+    constexpr float WINDOW_SIZE_X = 1000;
+    constexpr float WINDOW_SIZE_Y = 1000;
 #endif
-
-static SDL_Color black = { 0, 0, 0, 255 };
 
 inline std::string ff = "x";
 
@@ -34,9 +33,11 @@ inline float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
 inline float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
 inline double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 
+extern TTF_Font* font; // this is so all classes can see the font file variable. It MUST be opened in main.cpp in order to work at all.
+
 inline bool funcBad = true; // recompute f(x) if it its previous state is no longer valid 
                             //(function command changed the function string value)
-inline bool axesBad = true;
+inline bool axesBad = true; // same as funcBad but for the axes
 
 inline void recalculateRange() {
     DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
@@ -84,7 +85,8 @@ private:
 // THIS IS RESPONSIBLE FOR MANAGING THE UI
 class uiMain {
 public:
-    uiMain(SDL_Renderer* r) : renderer(r) {}
+    uiMain(SDL_Window* w, SDL_Renderer* r) : window(w), renderer(r) {}
+
 
     bool running = true;
 
@@ -93,6 +95,7 @@ public:
     void commands();
 
 private:
+    SDL_Window* window;
     SDL_Renderer* renderer;
 };
 

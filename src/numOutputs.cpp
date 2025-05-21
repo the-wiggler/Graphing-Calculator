@@ -8,7 +8,7 @@
 #include <queue>
 #include <sstream>
 #include <variant>
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // THIS FUNCTION CHANGES THE ff (user input) string into usable mathematical expression for executeFunctionCalculation
