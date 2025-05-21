@@ -13,10 +13,9 @@
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
-
 #ifdef _WIN32
-    constexpr float WINDOW_SIZE_X = 800;
-    constexpr float WINDOW_SIZE_Y = 800;
+    constexpr float WINDOW_SIZE_X = 1200;
+    constexpr float WINDOW_SIZE_Y = 1200;
 #else
     constexpr float WINDOW_SIZE_X = 1000;
     constexpr float WINDOW_SIZE_Y = 1000;

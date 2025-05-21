@@ -107,6 +107,22 @@ void uiMain::textInput() {
                     quit = true;
                 }
             }
+            if (e.type == SDL_EVENT_MOUSE_WHEEL) {
+                float scrollY = e.wheel.y;
+
+                DOMAIN_MIN -= scrollY;
+                DOMAIN_MAX += scrollY;
+                RANGE_MIN += scrollY;
+                RANGE_MAX -= scrollY;
+
+                std::cout << scrollY << std::endl;
+                
+                recalculateRange();
+                axesBad = true;
+                funcBad = true;
+                
+                quit = true;
+            }
         }
 
         // the box that renders over the previous text when updated

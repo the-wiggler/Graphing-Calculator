@@ -27,6 +27,8 @@ static bool isComplexFunction(const std::string& funcToken) {
 }
 
 void numOutputs::fInputParse() {
+    while (!operators.empty())  operators.pop();
+    while (!expression.empty()) expression.pop();
 
     std::istringstream fI(ff);
     std::string token;

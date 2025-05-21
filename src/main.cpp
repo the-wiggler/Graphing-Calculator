@@ -43,7 +43,6 @@ int main() {
         // renders the command window
         uiMain.textInput();
 
-        SDL_Delay(64); // hardcoded FPS limit (yikes)
     }
 
     TTF_CloseFont(font);
