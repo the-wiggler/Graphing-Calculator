@@ -16,7 +16,8 @@ add_executable(${PROJECT_NAME}
     src/ui.cpp
 )
 
-target_link_libraries(calc PRIVATE SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+target_link_libraries(calc
+    PRIVATE SDL3::SDL3 SDL3_ttf::SDL3_ttf)
 
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES
