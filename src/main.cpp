@@ -43,8 +43,8 @@ int main() {
         // renders the command window
         uiMain.textInput();
 
-        // 32 ms delay
-        SDL_Delay(32);
+        // ## ms delay
+        SDL_Delay(16);
 
     }
 

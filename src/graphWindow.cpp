@@ -39,36 +39,46 @@ void graphMain::axesRender() {
     // These lines calculate the position where x=0 and y=0 should be on the screen
     float x_origin = (RANGE_MAX / RANGE_INTERVAL) * WINDOW_SIZE_Y;
     float y_origin = (-DOMAIN_MIN / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
-    //
-    //////////////////////////////////////////////////////////////////////////////////
-    
-    //////////////////////////////////////////////////////////////////////////////////
-    // graph reference lines
-    SDL_SetRenderDrawColor(renderer, 31,40,47,255);
-    for (int i = 0; i <= DOMAIN_INTERVAL; i++) {
-        float a = (1 / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
-        SDL_RenderLine(renderer, 0 + i * a, 0, 0 + i * a, WINDOW_SIZE_X);
-    }
-    for (int i = 0; i <= RANGE_INTERVAL; i++) {
-        float a = (1 / RANGE_INTERVAL) * WINDOW_SIZE_Y;
-        SDL_RenderLine(renderer, 0, 0 + i * a, WINDOW_SIZE_Y, 0 + i * a);
-    }
-    //
+
+    // Determine grid spacing based on zoom level
+    float gridSpacing = 1.0f;  // Default to 1
+
+    float startX = ceil(DOMAIN_MIN / gridSpacing) * gridSpacing; // finds first grid line position
+    float startY = ceil(RANGE_MIN / gridSpacing) * gridSpacing;  // (first int value on screen where tick marks start)
     //////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////////
-    // domain tick marks
+    // graph reference lines
+    SDL_SetRenderDrawColor(renderer, 31,40,47,255);
+        // Vertical grid lines (for x-axis)
+    for (float x = startX; x <= DOMAIN_MAX; x += gridSpacing) {
+        // Convert x from domain space to screen space
+        float screenX = ((x - DOMAIN_MIN) / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
+        SDL_RenderLine(renderer, screenX, 0, screenX, WINDOW_SIZE_Y);
+        
+    }
+        // Horizontal grid lines (for y-axis)
+    for (float y = startY; y <= RANGE_MAX; y += gridSpacing) {
+        // Convert y from range space to screen space
+        float screenY = ((RANGE_MAX - y) / RANGE_INTERVAL) * WINDOW_SIZE_Y;
+        SDL_RenderLine(renderer, 0, screenY, WINDOW_SIZE_X, screenY);
+    }
+    //////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////////////  
+    // graph axes tick marks  
     SDL_SetRenderDrawColor(renderer, 100,110,120,255);
-    for (int i = 0; i <= DOMAIN_INTERVAL; i++) {
-        float a = (1 / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
-        SDL_RenderLine(renderer, 0 + i * a, x_origin - 5, 0 + i * a, x_origin + 5);
+        // domain tick marks
+    for (float x = startX; x <= DOMAIN_MAX; x += gridSpacing) {
+        float screenX = ((x - DOMAIN_MIN) / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
+        SDL_RenderLine(renderer, screenX, x_origin - 5, screenX, x_origin + 5);
     }
-    // range tick marks
-    for (int i = 0; i <= RANGE_INTERVAL; i++) {
-        float a = (1 / RANGE_INTERVAL) * WINDOW_SIZE_Y;
-        SDL_RenderLine(renderer, y_origin - 5, 0 + i * a, y_origin + 5, 0 + i * a);
+
+        // range tick marks
+    for (float y = startY; y <= RANGE_MAX; y += gridSpacing) {
+        float screenY = ((RANGE_MAX - y) / RANGE_INTERVAL) * WINDOW_SIZE_Y;
+        SDL_RenderLine(renderer, y_origin - 5, screenY, y_origin + 5, screenY);
     }
-    //
     //////////////////////////////////////////////////////////////////////////////////
 
     // this draws the axis lines if they're applicable within the given domain/range
