@@ -4,6 +4,7 @@
 #include "graphing.hpp"
 
 TTF_Font* font = nullptr;
+TTF_Font* tickFontSmall = nullptr;
 
 int main() {
 
@@ -18,6 +19,7 @@ int main() {
     std::string fontPath = SDL_GetBasePath();
     fontPath += "font.ttf";
     font = TTF_OpenFont(fontPath.c_str(), WINDOW_SIZE_Y/24);
+    tickFontSmall = TTF_OpenFont(fontPath.c_str(), WINDOW_SIZE_Y/48);
     if (!font) {
         SDL_ShowSimpleMessageBox(0x00000010, "Graphing Calculator", "ERROR: FONT FILE <font.ttf> NOT FOUND", NULL);
     }
@@ -43,7 +45,7 @@ int main() {
         // renders the command window
         uiMain.textInput();
 
-        // ## ms delay
+        // ## ms delay (i think it makes 60 fps)
         SDL_Delay(16);
 
     }

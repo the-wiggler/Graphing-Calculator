@@ -33,6 +33,7 @@ inline float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
 inline double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 
 extern TTF_Font* font; // this is so all classes can see the font file variable. It MUST be opened in main.cpp in order to work at all.
+extern TTF_Font* tickFontSmall;
 
 inline bool funcBad = true; // recompute f(x) if it its previous state is no longer valid 
                             //(function command changed the function string value)
@@ -102,3 +103,5 @@ private:
 
 #endif
 
+// colors :)
+constexpr SDL_Color textColor = { 210, 210, 210, 255 };

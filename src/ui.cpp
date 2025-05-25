@@ -120,8 +120,6 @@ void uiMain::textInput() {
                 DOMAIN_MAX += scrollY;
                 RANGE_MIN -= scrollY;
                 RANGE_MAX += scrollY;
-
-                std::cout << scrollY << std::endl;
                 
                 recalculateRange();
                 axesBad = true;
@@ -153,7 +151,6 @@ void uiMain::textInput() {
 
         // only updates the screen if there is something in the string
         if (!inputText.empty()) {
-            SDL_Color textColor = { 210, 210, 210, 255 };
             SDL_Surface* textSurface = TTF_RenderText_Blended(font, inputText.c_str(), inputText.length(), textColor);
             SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
             SDL_FRect renderQuad = { textRect.x, textRect.y, static_cast<float>(textSurface->w), static_cast<float>(textSurface->h) };

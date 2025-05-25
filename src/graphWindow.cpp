@@ -36,7 +36,7 @@ void graphMain::axesRender() {
     SDL_RenderClear(renderer);
 
     //////////////////////////////////////////////////////////////////////////////////
-    // These lines calculate the position where x=0 and y=0 should be on the screen
+    // These lines calculate the position where x=0 and y=0 should be on the screen --
     float x_origin = (RANGE_MAX / RANGE_INTERVAL) * WINDOW_SIZE_Y;
     float y_origin = (-DOMAIN_MIN / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
 
@@ -45,10 +45,11 @@ void graphMain::axesRender() {
 
     float startX = ceil(DOMAIN_MIN / gridSpacing) * gridSpacing; // finds first grid line position
     float startY = ceil(RANGE_MIN / gridSpacing) * gridSpacing;  // (first int value on screen where tick marks start)
+    // -------------------------------------------------------------------------------
     //////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////////
-    // graph reference lines
+    // graph reference lines ---------------------------------------------------------
     SDL_SetRenderDrawColor(renderer, 31,40,47,255);
         // Vertical grid lines (for x-axis)
     for (float x = startX; x <= DOMAIN_MAX; x += gridSpacing) {
@@ -63,10 +64,11 @@ void graphMain::axesRender() {
         float screenY = ((RANGE_MAX - y) / RANGE_INTERVAL) * WINDOW_SIZE_Y;
         SDL_RenderLine(renderer, 0, screenY, WINDOW_SIZE_X, screenY);
     }
+    // -------------------------------------------------------------------------------
     //////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////////  
-    // graph axes tick marks  
+    // graph axes tick marks ---------------------------------------------------------
     SDL_SetRenderDrawColor(renderer, 100,110,120,255);
         // domain tick marks
     for (float x = startX; x <= DOMAIN_MAX; x += gridSpacing) {
@@ -79,6 +81,40 @@ void graphMain::axesRender() {
         float screenY = ((RANGE_MAX - y) / RANGE_INTERVAL) * WINDOW_SIZE_Y;
         SDL_RenderLine(renderer, y_origin - 5, screenY, y_origin + 5, screenY);
     }
+    // -------------------------------------------------------------------------------
+    //////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // creates and renders tick mark labels for the axes -----------------------------
+    ////// for x-axis
+    for (float x = startX; x <= DOMAIN_MAX; x += gridSpacing) {
+        // Skip zero to avoid overlap with origin
+        if (std::abs(x) < 0.0001) continue;
+
+        float screenX = ((x - DOMAIN_MIN) / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
+
+        // creates text for the tick value
+        std::string tickText = std::to_string(static_cast<int>(std::round(x)));
+
+        // renders the text
+        SDL_Surface* textSurface = TTF_RenderText_Blended(tickFontSmall, tickText.c_str(), tickText.length(), textColor);
+        if (textSurface) {
+            SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+            
+            // Position the text below the x-axis
+            SDL_FRect renderQuad = { 
+                screenX - static_cast<float>(textSurface->w) / 2.0f, // Center horizontally
+                x_origin + 8, // Position below tick mark
+                static_cast<float>(textSurface->w), 
+                static_cast<float>(textSurface->h) 
+            };
+            
+            SDL_RenderTexture(renderer, textTexture, nullptr, &renderQuad);
+            SDL_DestroySurface(textSurface);
+            SDL_DestroyTexture(textTexture);
+        }
+    }
+    // -------------------------------------------------------------------------------
     //////////////////////////////////////////////////////////////////////////////////
 
     // this draws the axis lines if they're applicable within the given domain/range
