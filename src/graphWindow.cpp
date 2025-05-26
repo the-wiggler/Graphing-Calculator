@@ -42,6 +42,13 @@ void graphMain::axesRender() {
 
     // Determine grid spacing based on zoom level
     float gridSpacing = 1.0f;  // Default to 1
+    // this scales the tick placement based on the zoom level
+    if (DOMAIN_INTERVAL > 24) {
+        int labelFactor = static_cast<int>(DOMAIN_INTERVAL / 24);
+        for (int i = 0; i < labelFactor; i++) {
+            gridSpacing += 3;
+        }
+    }
 
     float startX = ceil(DOMAIN_MIN / gridSpacing) * gridSpacing; // finds first grid line position
     float startY = ceil(RANGE_MIN / gridSpacing) * gridSpacing;  // (first int value on screen where tick marks start)
@@ -88,8 +95,8 @@ void graphMain::axesRender() {
     // creates and renders tick mark labels for the axes -----------------------------
     ////// for x-axis
     for (float x = startX; x <= DOMAIN_MAX; x += gridSpacing) {
-        // Skip zero to avoid overlap with origin
-        if (std::abs(x) < 0.0001) continue;
+        // skip zero to avoid overlap with origin
+        if (std::abs(x) < 0.01) continue;
 
         float screenX = ((x - DOMAIN_MIN) / DOMAIN_INTERVAL) * WINDOW_SIZE_X;
 
@@ -101,10 +108,37 @@ void graphMain::axesRender() {
         if (textSurface) {
             SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
             
-            // Position the text below the x-axis
+            // position the text below the x-axis
             SDL_FRect renderQuad = { 
-                screenX - static_cast<float>(textSurface->w) / 2.0f, // Center horizontally
-                x_origin + 8, // Position below tick mark
+                screenX - static_cast<float>(textSurface->w) / 2.0f, // center horizontally
+                x_origin + 8, // below tick mark
+                static_cast<float>(textSurface->w), 
+                static_cast<float>(textSurface->h) 
+            };
+            
+            SDL_RenderTexture(renderer, textTexture, nullptr, &renderQuad);
+            SDL_DestroySurface(textSurface);
+            SDL_DestroyTexture(textTexture);
+        }
+    }
+    for (float y = startY; y <= RANGE_MAX; y += gridSpacing) {
+        // skip zero to avoid overlap with origin
+        if (std::abs(y) < 0.01) continue;
+
+        float screenY = ((RANGE_MAX - y) / RANGE_INTERVAL) * WINDOW_SIZE_Y;
+
+        // creates text for the tick value
+        std::string tickText = std::to_string(static_cast<int>(std::round(y)));
+
+        // renders the text
+        SDL_Surface* textSurface = TTF_RenderText_Blended(tickFontSmall, tickText.c_str(), tickText.length(), textColor);
+        if (textSurface) {
+            SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+            
+            // position the text to the left of the y-axis
+            SDL_FRect renderQuad = { 
+                y_origin - static_cast<float>(textSurface->w) - 8, // to the left of tick mark
+                screenY - static_cast<float>(textSurface->h) / 2.0f, // center vertically
                 static_cast<float>(textSurface->w), 
                 static_cast<float>(textSurface->h) 
             };
@@ -117,7 +151,7 @@ void graphMain::axesRender() {
     // -------------------------------------------------------------------------------
     //////////////////////////////////////////////////////////////////////////////////
 
-    // this draws the axis lines if they're applicable within the given domain/range
+    // this draws the axis lines if theyre applicable within the given domain/range
     SDL_RenderLine(renderer, 0, x_origin, WINDOW_SIZE_X, x_origin);
     SDL_RenderLine(renderer, y_origin, 0, y_origin, WINDOW_SIZE_Y);
 
