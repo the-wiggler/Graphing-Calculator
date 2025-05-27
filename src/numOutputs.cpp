@@ -135,9 +135,7 @@ void numOutputs::fInputParse() {
                         expression.emplace(operators.top());
                         operators.pop();
                     }
-                    else {
-                        break;
-                    }
+                    else break;
                 }
                 operators.push(token);
                 expectOperand = true;
@@ -195,7 +193,8 @@ void numOutputs::executeParseCalc() {
             }
 
             // if the character is a *special~* function
-            else if (c == "sin" || c == "cos" || c == "tan" || c == "log" || c == "ln" || c == "sqrt") {
+            else if (c == "sin" || c == "cos" || c == "tan" || 
+                     c == "log" || c == "ln"  || c == "sqrt") {
                 double v = eval.top(); eval.pop();
 
                 if      (c == "sin") result =   std::sin(v);
@@ -221,31 +220,52 @@ void numOutputs::executeFunctionCalculation() {
 
     fInputParse();
 
-    x = DOMAIN_MIN;
-    for (int i = 0; i <= FUNC_RES; i++, x += INCREMENT) {
+    const double TOLERANCE = 0.1; // once the difference in interpolated y and calculated y reaches this
+                                  // limit, it will stop the calculation as it is "good enough"
+                                  
+    const int RES_LIMIT = 5;      // this is the limit of how many points may be calculated between each
+                                  // point of the initial array so the CPU doesnt become overloaded
+
+    /*---sets the vector array with a min # of points-------*/
+    x = DOMAIN_MIN; // starts at DOMAIN_MIN, and ends at DOMAIN_MAX
+    double samples_per = DOMAIN_INTERVAL / (FUNC_RES - 1); // the increments in which x should increase until reaching DOMAIN_MAX
+    for (int i = 0; i < FUNC_RES; i++, x += samples_per) {
         xi = x;
-        executeParseCalc(); 
+        executeParseCalc();
         y = f_val;
-
-        // only appends points that exist in the domain, and are within the window boundary
-        if (y >= RANGE_MIN && y <= RANGE_MAX) {
-            func_valid = true; // makes the function valid (value stored in numOutputs.hpp)
-            fpoints.push_back({ x, y });
-        }
+        fpoints.push_back({ x, y });
     }
-    
-    // calculates min and max for the x array and y array
-    if (func_valid) {
-        x_min = fpoints[0].x;
-        x_max = fpoints.back().x;
-        y_min = y_max = fpoints.front().y;
-        for (const coordinate& point : fpoints) {
-            if (point.y < y_min) y_min = point.y;
-            if (point.y > y_max) y_max = point.y;
-        }
+    /*------------------------------------------------------*/
 
-        // range of the function
-        x_range = x_max - x_min;
-        y_range = y_max - y_min;
+    /*---adaptive sampling operation------------------------*/
+    // (this does nothing at the moment. I got tired so I stopped working)
+    bool finished_calculations = false;
+    while (!finished_calculations) {
+        int fx1 = 0; // first element
+        int fx2 = 1; // second element
+
+        while (fx2 <= fpoints.size()) {
+            std::cout << fx2 << std::endl;
+            fx1 ++;
+            fx2 ++;
+        }
+        finished_calculations = true;
     }
+    /*------------------------------------------------------*/
+
+    /*---calculates min and max for the x array and y array-*/
+    x_min = fpoints[0].x;
+    x_max = fpoints.back().x;
+    y_min = y_max = fpoints.front().y;
+
+    for (const coordinate& point : fpoints) {
+        if (point.y < y_min) y_min = point.y;
+        if (point.y > y_max) y_max = point.y;
+    }
+
+    x_range = x_max - x_min;
+    y_range = y_max - y_min;
+    /*------------------------------------------------------*/
+
+    func_valid = true;
 }

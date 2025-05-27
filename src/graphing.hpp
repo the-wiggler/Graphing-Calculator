@@ -23,7 +23,7 @@
 
 inline std::string ff = "x";
 
-inline int FUNC_RES = 5000;
+inline int FUNC_RES = 100;
 inline float DOMAIN_MIN = -10;
 inline float DOMAIN_MAX = 10;
 inline float RANGE_MIN = -10;
