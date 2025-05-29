@@ -37,7 +37,7 @@ void numOutputs::fInputParse() {
 
     token.clear();
 
-    for (size_t i = 0; i < ff.length(); ++i) {
+    for (std::size_t i = 0; i < ff.length(); ++i) {
         char c = ff[i];
 
         /* ignores whitespace -----------------------------------------------------------------*/
@@ -220,12 +220,9 @@ void numOutputs::executeFunctionCalculation() {
 
     fInputParse();
 
-    const double TOLERANCE = 0.1; // once the difference in interpolated y and calculated y reaches this
+    const double TOLERANCE = 0.0001; // once the difference in interpolated y and calculated y reaches this
                                   // limit, it will stop the calculation as it is "good enough"
                                   
-    const int RES_LIMIT = 5;      // this is the limit of how many points may be calculated between each
-                                  // point of the initial array so the CPU doesnt become overloaded
-
     /*---sets the vector array with a min # of points-------*/
     x = DOMAIN_MIN; // starts at DOMAIN_MIN, and ends at DOMAIN_MAX
     double samples_per = DOMAIN_INTERVAL / (FUNC_RES - 1); // the increments in which x should increase until reaching DOMAIN_MAX
@@ -240,16 +237,40 @@ void numOutputs::executeFunctionCalculation() {
     /*---adaptive sampling operation------------------------*/
     // (this does nothing at the moment. I got tired so I stopped working)
     bool finished_calculations = false;
-    while (!finished_calculations) {
-        int fx1 = 0; // first element
-        int fx2 = 1; // second element
+    int current_iteration = 0;
+    int MAX_ITERATIONS = 10000; // to prevent getting stuck in an infinite loop (for now)
 
-        while (fx2 <= fpoints.size()) {
-            std::cout << fx2 << std::endl;
-            fx1 ++;
-            fx2 ++;
+    while (!finished_calculations && current_iteration <= MAX_ITERATIONS) {
+        bool did_add_points = false; // if points were actually added to the vector array, this is set to true
+
+        for (std::size_t i = 0; i < fpoints.size() - 1; i++) {
+            coordinate fx1 = fpoints[i];
+            coordinate fx2 = fpoints[i + 1];
+
+            double midpoint_x = (fx2.x + fx1.x) / 2; // calculates the midpoint between fx1 and fx2
+            
+            xi = midpoint_x;
+            executeParseCalc(); // performs the operation that determines the y value at this x midpoint
+
+            double y_at_mid = f_val; // sets the y value at the midpoint equal to y_at_pos
+
+            // now we calculate the interpolation so it can be reference against out tolerance to check if its in an acceptable range yet!
+            // this uses the linear interpolation equation (look it up on wikipedia if u forgot lol)
+            double interpolated_y = fx1.y + (fx2.y - fx1.y) * ((midpoint_x - fx1.x) / (fx2.x - fx1.x));
+
+            // if the TRUE value is not within acceptable range of the interpolated value, it will insert the new point we calculated
+            if (std::abs(y_at_mid - interpolated_y) > TOLERANCE) {
+                // Insert the new point right after fx1 (at position i+1)
+                fpoints.insert(fpoints.begin() + i + 1, {midpoint_x, y_at_mid});
+                did_add_points = true;
+            }
         }
-        finished_calculations = true;
+
+        if (!did_add_points) {
+            finished_calculations = true;
+        }
+
+        current_iteration++;
     }
     /*------------------------------------------------------*/
 
