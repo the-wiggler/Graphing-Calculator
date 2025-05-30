@@ -184,7 +184,7 @@ void graphMain::functionRender() {
         std::vector<SDL_FPoint> SDL_fpoints;
         SDL_fpoints.reserve(outputs.fpoints.size());
 
-        SDL_SetRenderDrawColor(renderer, 50, 50, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         for (size_t i = 0; i < outputs.fpoints.size(); i++) {
             // Transform x from domain space to screen space
             int px = ((outputs.fpoints[i].x - DOMAIN_MIN) / DOMAIN_INTERVAL) * WINDOW_SIZE_X;

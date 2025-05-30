@@ -238,7 +238,7 @@ void numOutputs::executeFunctionCalculation() {
     // (this does nothing at the moment. I got tired so I stopped working)
     bool finished_calculations = false;
     int current_iteration = 0;
-    int MAX_ITERATIONS = 10000; // to prevent getting stuck in an infinite loop (for now)
+    int MAX_ITERATIONS = 10; // to prevent getting stuck in an infinite loop (for now)
 
     while (!finished_calculations && current_iteration <= MAX_ITERATIONS) {
         bool did_add_points = false; // if points were actually added to the vector array, this is set to true
@@ -258,15 +258,18 @@ void numOutputs::executeFunctionCalculation() {
             // this uses the linear interpolation equation (look it up on wikipedia if u forgot lol)
             double interpolated_y = fx1.y + (fx2.y - fx1.y) * ((midpoint_x - fx1.x) / (fx2.x - fx1.x));
 
-            // if the TRUE value is not within acceptable range of the interpolated value, it will insert the new point we calculated
-            if (std::abs(y_at_mid - interpolated_y) > TOLERANCE) {
+            // if the TRUE value is not within acceptable range of the interpolated value, it will insert the new point we calculated.
+            // the second statement after the and in the if statement is temporary and meant to fix issues when an asymptote exists and the function calculates
+            // infinitely. For example tan(x), where the difference of asymptotes is very large, it will ignore performing adaptive sampling if the difference
+            // in points is too great
+            if (std::abs(y_at_mid - interpolated_y) > TOLERANCE && std::abs(y_at_mid - interpolated_y) < RANGE_INTERVAL) {
                 // Insert the new point right after fx1 (at position i+1)
                 fpoints.insert(fpoints.begin() + i + 1, {midpoint_x, y_at_mid});
                 did_add_points = true;
             }
         }
 
-        if (!did_add_points) {
+        if (!did_add_points || fpoints.size() >= MAX_POINT_COUNT) {
             finished_calculations = true;
         }
 

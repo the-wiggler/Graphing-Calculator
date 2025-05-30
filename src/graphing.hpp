@@ -23,13 +23,14 @@
 
 inline std::string ff = "x";
 
-inline int FUNC_RES = 100;
 inline float DOMAIN_MIN = -10;
 inline float DOMAIN_MAX = 10;
 inline float RANGE_MIN = -10;
 inline float RANGE_MAX = 10;
 inline float DOMAIN_INTERVAL = DOMAIN_MAX - DOMAIN_MIN;
 inline float RANGE_INTERVAL = RANGE_MAX - RANGE_MIN;
+inline int FUNC_RES = 100; // the initial resolution at which the function should display. This is the baseline for adaptive sampling to work from
+inline size_t MAX_POINT_COUNT = 1500; // the maximum amount of points that can be shown on the screen at once
 inline double INCREMENT = (DOMAIN_MAX - DOMAIN_MIN) / FUNC_RES;
 
 extern TTF_Font* font; // this is so all classes can see the font file variable. It MUST be opened in main.cpp in order to work at all.
