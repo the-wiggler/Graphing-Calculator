@@ -88,7 +88,7 @@ void numOutputs::fInputParse() {
                 expectOperand = true;
             }
             else {
-                std::cerr << "ERROR: UNKNOWN TOKEN INPUT\n";
+                std::cerr << "ERROR: You typed in the function wrong lol\n";
                 return;
             }
         }
@@ -201,11 +201,11 @@ void numOutputs::executeParseCalc() {
                 else if (c == "cos") result =   std::cos(v);
                 else if (c == "tan") result =   std::tan(v);
                 else if (c == "log") result =   std::log10(v);
-                else if (c == "ln") result =    std::log(v);
+                else if (c == "ln")  result =   std::log(v);
                 else if (c == "sqrt") result =  std::sqrt(v);
 
                 eval.push(result);
-            }
+            } 
         }
     }
     f_val = eval.top();
@@ -235,7 +235,6 @@ void numOutputs::executeFunctionCalculation() {
     /*------------------------------------------------------*/
 
     /*---adaptive sampling operation------------------------*/
-    // (this does nothing at the moment. I got tired so I stopped working)
     bool finished_calculations = false;
     int current_iteration = 0;
     int MAX_ITERATIONS = 10; // to prevent getting stuck in an infinite loop (for now)
@@ -262,8 +261,8 @@ void numOutputs::executeFunctionCalculation() {
             // the second statement after the and in the if statement is temporary and meant to fix issues when an asymptote exists and the function calculates
             // infinitely. For example tan(x), where the difference of asymptotes is very large, it will ignore performing adaptive sampling if the difference
             // in points is too great
-            if (std::abs(y_at_mid - interpolated_y) > TOLERANCE && std::abs(y_at_mid - interpolated_y) < RANGE_INTERVAL) {
-                // Insert the new point right after fx1 (at position i+1)
+            if (std::abs(y_at_mid - interpolated_y) > TOLERANCE) {
+                // insert the new point right after fx1 (at position i+1)
                 fpoints.insert(fpoints.begin() + i + 1, {midpoint_x, y_at_mid});
                 did_add_points = true;
             }
