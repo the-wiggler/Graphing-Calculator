@@ -57,7 +57,7 @@ void graphMain::axesRender() {
 
     //////////////////////////////////////////////////////////////////////////////////
     // graph reference lines ---------------------------------------------------------
-    SDL_SetRenderDrawColor(renderer, 31,40,47,255);
+    SDL_SetRenderDrawColor(renderer, 132,121,124,150);
         // Vertical grid lines (for x-axis)
     for (float x = startX; x <= DOMAIN_MAX; x += gridSpacing) {
         // Convert x from domain space to screen space
@@ -76,7 +76,7 @@ void graphMain::axesRender() {
 
     //////////////////////////////////////////////////////////////////////////////////  
     // graph axes tick marks ---------------------------------------------------------
-    SDL_SetRenderDrawColor(renderer, 100,110,120,255);
+    SDL_SetRenderDrawColor(renderer, 132,121,124,255);
         // domain tick marks
     for (float x = startX; x <= DOMAIN_MAX; x += gridSpacing) {
         float screenX = ((x - DOMAIN_MIN) / DOMAIN_INTERVAL) * WINDOW_SIZE_X;

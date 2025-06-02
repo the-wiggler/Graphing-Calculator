@@ -24,7 +24,7 @@ int main() {
         SDL_ShowSimpleMessageBox(0x00000010, "Graphing Calculator", "ERROR: FONT FILE <font.ttf> NOT FOUND", NULL);
     }
 
-    /////////////////////////////////////s//////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // LOOP FOR THE WINDOW PROGRAM                                                                           //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@ int main() {
 
     while (uiMain.running) {
 
-        SDL_SetRenderDrawColor(renderer, 19,22,25,255);
+        SDL_SetRenderDrawColor(renderer, 44,37,37,255);
         SDL_RenderClear(renderer);
 
         // creates an instance of graphMain -- the rendering solution to display the graph
