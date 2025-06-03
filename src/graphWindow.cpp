@@ -4,6 +4,7 @@
 #include "graphing.hpp"
 #include <cmath>
 #include <vector>
+#include <algorithm>
 
 static SDL_Texture* cachedAxes = nullptr;
 static SDL_Texture* cachedFunc = nullptr;
@@ -198,21 +199,30 @@ void graphMain::functionRender() {
             SDL_fpoints.push_back(point);
         }
 
+        outputs.determineAsymptote();
+
         // Renders the points on the renderer
         for (size_t i = 0; i < SDL_fpoints.size() - 1; i++) {
-            // in order to fix this you can create a new function that runs through all points as they are being calculated
-            // in numOutputs. This will detect when a the function is increasing as an asymptote would: think 0.1, 0.01, 0.001, etc
-            // when it detects this it flags the "approximate" asymptote value and logs that into a vector array of asymptote values
-            // this array will then be used by functionRender here to determine where it should NOT be drawing lines (or somthing
-            // like that idrk lol) Like basically it goes through the fpoints array and when it sees a big y jump its like 'oh shit
-            // theres an asymptote between those values' and it does all the things.
-            if (SDL_fpoints[i].y < 100 && SDL_fpoints[i + 1].y > 1400) {
-                continue;
-            }
-            else {
+            bool drawLine = true;
+
+            if (!outputs.hasAsymptote) {
                 SDL_RenderLine(renderer,  
-                               SDL_fpoints[i].x, SDL_fpoints[i].y,      // start point
-                               SDL_fpoints[i + 1].x, SDL_fpoints[i + 1].y);  // end point
+                            SDL_fpoints[i].x, SDL_fpoints[i].y,      // start point
+                            SDL_fpoints[i + 1].x, SDL_fpoints[i + 1].y);  // end point
+            }
+            else if (outputs.hasAsymptote) {
+                for (size_t c = 0; c < outputs.asymptotePos.size(); c++) {
+                    if ((i == outputs.asymptotePos[c])) {
+                        drawLine = false;
+                        break;
+                    }
+                }
+                if (drawLine) {
+                    SDL_RenderLine(renderer,  
+                        SDL_fpoints[i].x, SDL_fpoints[i].y,      // start point
+                        SDL_fpoints[i + 1].x, SDL_fpoints[i + 1].y);  // end pointd
+
+                }
             }
         }
     }

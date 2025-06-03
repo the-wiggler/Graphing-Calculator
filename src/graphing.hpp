@@ -56,10 +56,14 @@ typedef struct coordinate {
 // THIS IS RESPONSIBLE FOR HOLDING THE MATHEMATICAL ARRAY DATA
 class numOutputs {
 public:
-    std::vector<coordinate> fpoints;
+    std::vector<coordinate> fpoints; // the array that the coordinate points for the function are stored
+    std::vector<double> vertAsymptotes;
+    std::vector<size_t> asymptotePos; // a number occupying this array represents the position of a point in fpoints
+                                   // that exists right BEFORE an asymptote
 
     double y_min, y_max, x_min, x_max, x_range, y_range, x, y = 0.0, f_val;
     bool func_valid = false;
+    bool hasAsymptote = false;
     double xi; // NOTE: YOU'RE REQUIRED TO DEFINE A VALUE FOR xi BEFORE THE FUNCTION EXECUTES
 
     std::stack<std::string> operators;
@@ -69,6 +73,7 @@ public:
     int determinePrecedence(const std::string& op);
     void executeFunctionCalculation();
     void executeParseCalc();
+    void determineAsymptote();
 };
 
 // THIS IS RESPONSIBLE FOR GRAPHING THE ARRAY OF FUNCTION DATA ONTO THE WINDOW (USED BY graph.cpp)

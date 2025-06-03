@@ -89,7 +89,7 @@ void numOutputs::fInputParse() {
             }
             else {
                 std::cerr << "ERROR: You typed in the function wrong lol\n";
-                return;
+                break;
             }
         }
 
@@ -292,3 +292,25 @@ void numOutputs::executeFunctionCalculation() {
 
     func_valid = true;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// THIS FUNCTION RUNS THROUGH THE ARRAY FPOINTS TO DETEMINE WHERE AN ASYMPTOTE MIGHT BE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void numOutputs::determineAsymptote() {
+    hasAsymptote = false;
+    vertAsymptotes.clear();
+    asymptotePos.clear();
+
+    for (size_t i = 0; i < fpoints.size() - 1; i++) {
+        double p1 = fpoints[i].y;
+        double p2 = fpoints[i + 1].y;
+        // if the first point is above bounds on the top AND the second point is below bounds on the bottom
+        // there must be an asymptote there... vice versa for the other case
+        if ((p1 > RANGE_MAX && p2 < RANGE_MIN) || (p1 < RANGE_MIN && p2 > RANGE_MAX)) {
+            vertAsymptotes.push_back((fpoints[i].x + fpoints[i + 1].x) / 2);
+            asymptotePos.push_back(i);
+            hasAsymptote = true;
+            std::cout << "Vertical asymptote @ x = : " << vertAsymptotes.back() << " ... with position index: " << asymptotePos.back() << std::endl;
+        }
+    }
+} 
